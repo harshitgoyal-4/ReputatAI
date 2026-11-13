@@ -1,0 +1,9 @@
+pandas
+pydantic
+python-dotenv
+PyYAML
+pytest
+openai
+streamlit
+plotly
+flashrank

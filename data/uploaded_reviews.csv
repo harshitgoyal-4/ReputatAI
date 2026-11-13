@@ -1,0 +1,31 @@
+review_id,date,rating,platform,customer,review
+1,2026-08-20,5,Google,Customer A,"Absolutely loved the experience. The staff was friendly and helpful, and everything was handled quickly."
+2,2026-08-20,2,Google,Customer B,My order arrived two days late and nobody from support responded. Very disappointing delivery experience.
+3,2026-08-21,1,Trustpilot,Customer C,The product quality was terrible and I want a refund. This is not what I expected at all.
+4,2026-08-21,4,Google,Customer D,"Good overall experience. The product works well, although delivery could have been a little faster."
+5,2026-08-22,3,Survey,Customer E,"The service was okay, but the checkout process was confusing and took too long."
+6,2026-08-22,1,Google,Customer F,Extremely angry about the delayed delivery. I paid for fast shipping and received my order much later.
+7,2026-08-23,5,Trustpilot,Customer G,Great product and excellent customer service. The team resolved my question immediately.
+8,2026-08-23,2,Survey,Customer H,The item arrived damaged. I contacted support but still haven't received a useful solution.
+9,2026-08-24,4,Google,Customer I,Nice experience overall. Staff were polite and the product matched the description.
+10,2026-08-24,2,Trustpilot,Customer J,The product stopped working after a few days. I expected better quality for the price.
+11,2026-08-25,5,Google,Customer K,Fantastic service from start to finish. I would definitely recommend this business.
+12,2026-08-25,3,Survey,Customer L,"Average experience. Nothing was seriously wrong, but there is room for improvement in customer support."
+13,2026-08-26,2,Google,Customer M,My package was delayed again and tracking information was not updated. Very frustrating.
+14,2026-08-26,4,Trustpilot,Customer N,Good value and decent quality. Delivery was on time and the ordering process was simple.
+15,2026-08-27,1,Google,Customer O,The product quality is unacceptable. I am very angry and want someone to fix this immediately.
+16,2026-08-27,3,Survey,Customer P,Can you explain how the refund process works? I submitted a request but have not heard back yet.
+17,2026-08-28,5,Google,Customer Q,"Excellent experience. Fast delivery, great product, and very responsive support team."
+18,2026-08-28,2,Trustpilot,Customer R,Customer service was rude and did not take my complaint seriously. I am unhappy with the way this was handled.
+19,2026-08-29,4,Google,Customer S,Overall very happy with the service. A small improvement to delivery updates would make it even better.
+20,2026-08-29,1,Survey,Customer T,I have been waiting for my refund for weeks. This is extremely frustrating and I need this resolved urgently.
+21,2026-08-30,2,Google,Customer U,The website kept crashing while I was trying to place an order. I had to try several times.
+22,2026-08-30,5,Trustpilot,Customer V,The replacement arrived quickly and the support team was incredibly helpful. Thank you for resolving it.
+23,2026-08-31,1,Google,Customer W,"Worst experience I've had. The order was incorrect, support ignored me, and I want this escalated."
+24,2026-08-31,3,Survey,Customer X,"The product is fine, but the price feels high compared with similar alternatives."
+25,2026-09-01,4,Google,Customer Y,Good experience overall. The only issue was that the delivery driver arrived later than expected.
+26,2026-09-01,1,Trustpilot,Customer Z,I received a completely different item from what I ordered. Please arrange a resolution as soon as possible.
+27,2026-09-02,5,Google,Customer AA,Very impressed with the quality and service. Everything was smooth and professional.
+28,2026-09-02,2,Survey,Customer AB,I tried contacting support three times and never got a response. This needs attention.
+29,2026-09-03,3,Trustpilot,Customer AC,"The product is acceptable, but the instructions were unclear and difficult to follow."
+30,2026-09-03,1,Google,Customer AD,My payment was charged but the order was not confirmed. I need help getting my money back.

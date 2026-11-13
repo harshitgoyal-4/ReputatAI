@@ -1,0 +1,24 @@
+client:
+  name: Stake.com
+  industry: online_gaming_and_betting
+  brand_tone: energetic, transparent, security-focused and community-driven
+brand:
+  tone: calm, compliant and clear
+  response_style: reassuring and procedure-oriented
+response:
+  enabled: true
+  tone: calm
+  style: compliant
+  max_length: 100
+  allow_compensation_promises: false
+  request_contact_for_escalation: true
+risk:
+  escalation_threshold: 30
+categories:
+- deposit_withdrawal_delays
+- kyc_verification
+- vip_rewards_bonuses
+- gameplay_fairness
+- account_security_2fa
+- support_responsiveness
+- general

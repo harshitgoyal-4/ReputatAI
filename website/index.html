@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReputatAI — AI-Powered Reputation Intelligence & Crisis Defense</title>
+  <meta name="description" content="Real-time sentiment intelligence, automated crisis defense, and reputation risk analytics for Web3, gaming, and high-velocity digital platforms.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #06060b;
+      --bg-secondary: #0c0c14;
+      --bg-card: rgba(14, 14, 24, 0.6);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-glow: rgba(0, 212, 255, 0.15);
+      --text-primary: #f0f0f5;
+      --text-secondary: #8a8a9a;
+      --text-muted: #55556a;
+      --accent-cyan: #00d4ff;
+      --accent-blue: #3b82f6;
+      --accent-purple: #7c3aed;
+      --accent-pink: #ec4899;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --glow-cyan: 0 0 40px rgba(0, 212, 255, 0.15);
+      --glow-purple: 0 0 40px rgba(124, 58, 237, 0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; }
+
+    /* ═══════════════════════════════════════════
+       ANIMATED BACKGROUND
+       ═══════════════════════════════════════════ */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .bg-orb {
+      position: fixed; border-radius: 50%; filter: blur(120px);
+      pointer-events: none; z-index: 0;
+    }
+    .bg-orb-1 {
+      width: 600px; height: 600px; top: -200px; right: -200px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%);
+      animation: orbFloat1 20s ease-in-out infinite;
+    }
+    .bg-orb-2 {
+      width: 500px; height: 500px; bottom: 10%; left: -150px;
+      background: radial-gradient(circle, rgba(124,58,237,0.08), transparent 70%);
+      animation: orbFloat2 25s ease-in-out infinite;
+    }
+    .bg-orb-3 {
+      width: 400px; height: 400px; top: 50%; right: 10%;
+      background: radial-gradient(circle, rgba(236,72,153,0.05), transparent 70%);
+      animation: orbFloat3 18s ease-in-out infinite;
+    }
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-80px, 60px) scale(1.1); }
+      66% { transform: translate(40px, -40px) scale(0.95); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(100px, -80px) scale(1.15); }
+    }
+    @keyframes orbFloat3 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-60px, 60px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLL REVEAL ANIMATIONS
+       ═══════════════════════════════════════════ */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ═══════════════════════════════════════════
+       LAYOUT
+       ═══════════════════════════════════════════ */
+    .container {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      position: relative; z-index: 1;
+    }
+    section { padding: 120px 0; position: relative; }
+
+    /* ═══════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 16px 0;
+      background: rgba(6, 6, 11, 0.7);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: var(--transition);
+    }
+    nav.scrolled { padding: 10px 0; background: rgba(6, 6, 11, 0.92); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 1.25rem; letter-spacing: -0.03em;
+    }
+    .nav-logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 900; color: #fff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+    .nav-logo span { color: var(--accent-cyan); }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);
+      transition: color 0.3s; position: relative;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      transition: width 0.3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      padding: 9px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #fff; transition: var(--transition); cursor: pointer;
+      border: none;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary); border-radius: 2px; transition: var(--transition); }
+
+    /* ═══════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: 100px; padding-bottom: 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-content { max-width: 800px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px 6px 8px; border-radius: 50px;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      font-size: 0.8rem; font-weight: 500; color: var(--accent-cyan);
+      margin-bottom: 28px; backdrop-filter: blur(10px);
+    }
+    .hero-badge-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -0.04em; margin-bottom: 24px;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.2rem; line-height: 1.7;
+      color: var(--text-secondary); max-width: 600px; margin-bottom: 40px;
+    }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      font-weight: 600; font-size: 1rem; color: #fff;
+      transition: var(--transition); cursor: pointer; border: none;
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3); }
+    .btn-primary span { position: relative; z-index: 1; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid var(--border-glow);
+      font-weight: 600; font-size: 1rem; color: var(--text-primary);
+      transition: var(--transition); cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 212, 255, 0.05);
+      transform: translateY(-2px);
+    }
+    .hero-visual {
+      position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
+      width: 550px; height: 550px; pointer-events: none; opacity: 0.7;
+    }
+    .hero-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(0, 212, 255, 0.1);
+    }
+    .hero-ring-1 { inset: 0; animation: spin 40s linear infinite; }
+    .hero-ring-2 { inset: 60px; animation: spin 30s linear infinite reverse; border-color: rgba(124,58,237,0.1); }
+    .hero-ring-3 { inset: 120px; animation: spin 20s linear infinite; border-color: rgba(236,72,153,0.08); }
+    .hero-ring-dot {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan);
+    }
+    .hero-ring-1 .hero-ring-dot { top: 0; left: 50%; }
+    .hero-ring-2 .hero-ring-dot { bottom: 0; right: 20%; background: var(--accent-purple); box-shadow: 0 0 15px var(--accent-purple); }
+    .hero-ring-3 .hero-ring-dot { top: 30%; left: 0; background: var(--accent-pink); box-shadow: 0 0 15px var(--accent-pink); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══════════════════════════════════════════
+       METRICS BAR
+       ═══════════════════════════════════════════ */
+    .metrics-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: var(--border-subtle); border-radius: var(--radius);
+      overflow: hidden; margin-top: -60px; position: relative; z-index: 2;
+    }
+    .metric-item {
+      background: var(--bg-secondary); padding: 36px 28px; text-align: center;
+      transition: var(--transition);
+    }
+    .metric-item:hover { background: rgba(14, 14, 24, 0.9); }
+    .metric-number {
+      font-size: 2.4rem; font-weight: 800; letter-spacing: -0.03em;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 6px;
+    }
+    .metric-number.cyan { color: var(--accent-cyan); }
+    .metric-number.purple { color: var(--accent-purple); }
+    .metric-number.green { color: var(--accent-green); }
+    .metric-number.blue { color: var(--accent-blue); }
+    .metric-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ═══════════════════════════════════════════
+       SECTION HEADERS
+       ═══════════════════════════════════════════ */
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--accent-cyan); margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: ''; width: 20px; height: 1px;
+      background: linear-gradient(90deg, var(--accent-cyan), transparent);
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 1.1rem; color: var(--text-secondary);
+      line-height: 1.7; max-width: 620px;
+    }
+    .section-header-center { text-align: center; }
+    .section-header-center .section-subtitle { margin: 0 auto; }
+
+    /* ═══════════════════════════════════════════
+       FEATURES – BENTO GRID
+       ═══════════════════════════════════════════ */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 16px; margin-top: 60px;
+    }
+    .bento-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius); padding: 36px;
+      position: relative; overflow: hidden;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+    .bento-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-4px);
+      box-shadow: var(--glow-cyan);
+    }
+    .bento-card.span-2 { grid-column: span 2; }
+    .bento-card-glow {
+      position: absolute; top: -1px; left: 20%; right: 20%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .bento-card:hover .bento-card-glow { opacity: 1; }
+    .bento-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 20px;
+    }
+    .bento-icon.cyan { background: rgba(0, 212, 255, 0.1); color: var(--accent-cyan); }
+    .bento-icon.purple { background: rgba(124, 58, 237, 0.1); color: var(--accent-purple); }
+    .bento-icon.pink { background: rgba(236, 72, 153, 0.1); color: var(--accent-pink); }
+    .bento-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+    .bento-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
+    .bento-icon.blue { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+    .bento-card h3 {
+      font-size: 1.2rem; font-weight: 700; margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .bento-card p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; }
+
+    /* Mini chart inside bento card */
+    .mini-chart {
+      display: flex; align-items: flex-end; gap: 3px;
+      height: 60px; margin-top: 20px; padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .mini-bar {
+      flex: 1; border-radius: 3px 3px 0 0;
+      background: linear-gradient(to top, var(--accent-cyan), rgba(0,212,255,0.3));
+      animation: barGrow 1.5s ease-out forwards;
+      transform-origin: bottom;
+    }
+    @keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+    /* Live terminal mockup */
+    .terminal-mock {
+      margin-top: 20px; padding: 16px;
+      background: rgba(0,0,0,0.4); border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      line-height: 1.8; color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+    .terminal-mock .prompt { color: var(--accent-green); }
+    .terminal-mock .cmd { color: var(--text-primary); }
+    .terminal-mock .output { color: var(--accent-cyan); }
+    .terminal-mock .warn { color: var(--accent-orange); }
+
+    /* ═══════════════════════════════════════════
+       HOW IT WORKS – TIMELINE
+       ═══════════════════════════════════════════ */
+    .timeline {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+      margin-top: 60px; position: relative;
+    }
+    .timeline::before {
+      content: ''; position: absolute;
+      top: 36px; left: 12.5%; right: 12.5%; height: 2px;
+      background: linear-gradient(90deg,
+        var(--accent-cyan), var(--accent-blue),
+        var(--accent-purple), var(--accent-pink));
+      opacity: 0.3;
+    }
+    .timeline-step { text-align: center; position: relative; }
+    .timeline-dot {
+      width: 72px; height: 72px; border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-glow);
+      transition: var(--transition); position: relative; z-index: 1;
+    }
+    .timeline-step:hover .timeline-dot {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+    }
+    .timeline-step h4 {
+      font-size: 1rem; font-weight: 700; margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .timeline-step p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ═══════════════════════════════════════════
+       THREAT RADAR – LIVE DASHBOARD PREVIEW
+       ═══════════════════════════════════════════ */
+    .dashboard-preview {
+      margin-top: 60px; border-radius: var(--radius);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+    }
+    .dashboard-topbar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 20px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .dot-r { width: 12px; height: 12px; border-radius: 50%; background: #ef4444; }
+    .dot-y { width: 12px; height: 12px; border-radius: 50%; background: #f59e0b; }
+    .dot-g { width: 12px; height: 12px; border-radius: 50%; background: #10b981; }
+    .dashboard-url {
+      flex: 1; text-align: center; font-size: 0.75rem;
+      color: var(--text-muted); font-family: 'JetBrains Mono', monospace;
+    }
+    .dashboard-body {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border-subtle);
+    }
+    .dash-panel { background: var(--bg-secondary); padding: 32px; }
+    .dash-panel h5 {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted); margin-bottom: 16px;
+    }
+    .sentiment-bar-group { display: flex; flex-direction: column; gap: 12px; }
+    .sentiment-row { display: flex; align-items: center; gap: 12px; }
+    .sentiment-label { font-size: 0.82rem; color: var(--text-secondary); width: 80px; }
+    .sentiment-track {
+      flex: 1; height: 8px; background: rgba(255,255,255,0.05);
+      border-radius: 4px; overflow: hidden;
+    }
+    .sentiment-fill {
+      height: 100%; border-radius: 4px;
+      animation: fillBar 2s ease-out forwards;
+      transform-origin: left;
+    }
+    @keyframes fillBar { from { width: 0; } }
+    .sentiment-fill.positive { background: linear-gradient(90deg, var(--accent-green), #34d399); }
+    .sentiment-fill.neutral { background: linear-gradient(90deg, var(--accent-blue), #60a5fa); }
+    .sentiment-fill.negative { background: linear-gradient(90deg, var(--accent-red), #f87171); }
+    .sentiment-pct { font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; color: var(--text-primary); width: 40px; text-align: right; }
+
+    .alert-feed { display: flex; flex-direction: column; gap: 10px; }
+    .alert-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: var(--radius-sm);
+      background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle);
+      font-size: 0.82rem; color: var(--text-secondary);
+    }
+    .alert-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .alert-dot.crit { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
+    .alert-dot.warn { background: var(--accent-orange); box-shadow: 0 0 8px var(--accent-orange); }
+    .alert-dot.info { background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+    .alert-time { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       ARCHITECTURE / TECH STACK
+       ═══════════════════════════════════════════ */
+    .tech-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-top: 40px;
+    }
+    .tech-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 18px; border-radius: var(--radius-sm);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .tech-pill:hover { border-color: var(--border-glow); color: var(--text-primary); }
+    .tech-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ═══════════════════════════════════════════
+       COMPARISON TABLE
+       ═══════════════════════════════════════════ */
+    .compare-table-wrap {
+      margin-top: 60px; border-radius: var(--radius);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th, .compare-table td {
+      padding: 16px 20px; text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.88rem;
+    }
+    .compare-table thead th {
+      background: rgba(0,0,0,0.3); font-weight: 600;
+      font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted);
+    }
+    .compare-table thead th:first-child { color: var(--text-primary); }
+    .compare-table tbody tr { background: var(--bg-secondary); transition: background 0.3s; }
+    .compare-table tbody tr:hover { background: rgba(0, 212, 255, 0.03); }
+    .compare-table td:first-child { font-weight: 600; color: var(--text-primary); }
+    .compare-table .check { color: var(--accent-green); font-weight: 700; }
+    .compare-table .cross { color: var(--text-muted); }
+    .compare-table .highlight-col { background: rgba(0, 212, 255, 0.04); }
+    .compare-table thead .highlight-col {
+      color: var(--accent-cyan); position: relative;
+    }
+    .compare-table thead .highlight-col::after {
+      content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+    }
+
+    /* ═══════════════════════════════════════════
+       CTA SECTION
+       ═══════════════════════════════════════════ */
+    .cta-section {
+      text-align: center; padding: 120px 0;
+      position: relative;
+    }
+    .cta-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 400px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0,212,255,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800;
+      letter-spacing: -0.03em; margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .cta-section p {
+      font-size: 1.1rem; color: var(--text-secondary);
+      max-width: 500px; margin: 0 auto 36px; line-height: 1.7;
+      position: relative; z-index: 1;
+    }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 48px 0; position: relative; z-index: 1;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.95rem; }
+    .footer-brand span { color: var(--accent-cyan); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.85rem; color: var(--text-muted); transition: color 0.3s; }
+    .footer-links a:hover { color: var(--text-primary); }
+    .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-card.span-2 { grid-column: span 1; }
+      .timeline { grid-template-columns: repeat(2, 1fr); }
+      .timeline::before { display: none; }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); margin-top: -40px; }
+      .dashboard-body { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+    }
+    @media (max-width: 640px) {
+      section { padding: 80px 0; }
+      .metrics-bar { grid-template-columns: 1fr 1fr; }
+      .timeline { grid-template-columns: 1fr; gap: 40px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 100%; left: 0; right: 0;
+        background: rgba(6,6,11,0.97); backdrop-filter: blur(20px);
+        padding: 24px; gap: 20px; border-bottom: 1px solid var(--border-subtle);
+      }
+      .compare-table-wrap { overflow-x: auto; }
+      .compare-table { min-width: 600px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Effects -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">R</div>
+        Reputat<span>AI</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#features">Platform</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#dashboard">Live Radar</a>
+        <a href="#compare">Compare</a>
+        <a href="#contact" class="nav-cta">Request Demo</a>
+      </div>
+      <button class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge reveal">
+          <div class="hero-badge-dot"></div>
+          Real-Time Monitoring Active
+        </div>
+        <h1 class="reveal reveal-delay-1">
+          Your Brand's<br>
+          <span class="gradient-text">Reputation Shield</span><br>
+          Powered by AI
+        </h1>
+        <p class="reveal reveal-delay-2">
+          Detect reputation threats in real time. Neutralize FUD cascades before they go viral.
+          Defend your brand with autonomous AI response engines and crisis containment protocols.
+        </p>
+        <div class="hero-buttons reveal reveal-delay-3">
+          <a href="#contact" class="btn-primary">
+            <span>&#9889; Request Confidential Demo</span>
+          </a>
+          <a href="#dashboard" class="btn-secondary">
+            &#9678; See Live Radar
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Animated rings -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-ring hero-ring-1"><div class="hero-ring-dot"></div></div>
+      <div class="hero-ring hero-ring-2"><div class="hero-ring-dot"></div></div>
+      <div class="hero-ring hero-ring-3"><div class="hero-ring-dot"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ METRICS BAR ═══ -->
+  <div class="container">
+    <div class="metrics-bar reveal">
+      <div class="metric-item">
+        <div class="metric-number cyan" data-target="24" data-suffix="/7">0/7</div>
+        <div class="metric-label">Threat Monitoring</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-number green" data-target="97" data-suffix="%">0%</div>
+        <div class="metric-label">Detection Accuracy</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-number purple" data-target="5" data-prefix="<" data-suffix=" min">0 min</div>
+        <div class="metric-label">Response SLA</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-number blue" data-target="40" data-suffix="%+">0%+</div>
+        <div class="metric-label">Churn Reduction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FEATURES – BENTO GRID ═══ -->
+  <section id="features">
+    <div class="container">
+      <div class="section-header-center">
+        <div class="section-label reveal">Core Modules</div>
+        <h2 class="section-title reveal reveal-delay-1">Six Engines. One Intelligent Platform.</h2>
+        <p class="section-subtitle reveal reveal-delay-2">
+          Every module works autonomously and in concert — ingesting, analyzing, and neutralizing
+          reputation threats across every public surface your brand touches.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Card 1: Review Explorer -->
+        <div class="bento-card span-2 reveal">
+          <div class="bento-card-glow"></div>
+          <div class="bento-icon cyan">&#128269;</div>
+          <h3>Review Explorer &amp; Ingestion Engine</h3>
+          <p>
+            Continuously monitors Trustpilot, Google Reviews, Reddit threads, Hacker News,
+            app stores, and 12+ social signals. Aggregates every mention into a unified
+            threat timeline with source attribution, velocity tracking, and anomaly spikes.
+          </p>
+          <div class="mini-chart">
+            <div class="mini-bar" style="height: 30%"></div>
+            <div class="mini-bar" style="height: 45%"></div>
+            <div class="mini-bar" style="height: 25%"></div>
+            <div class="mini-bar" style="height: 60%"></div>
+            <div class="mini-bar" style="height: 55%"></div>
+            <div class="mini-bar" style="height: 80%"></div>
+            <div class="mini-bar" style="height: 70%"></div>
+            <div class="mini-bar" style="height: 90%"></div>
+            <div class="mini-bar" style="height: 65%"></div>
+            <div class="mini-bar" style="height: 95%"></div>
+            <div class="mini-bar" style="height: 50%"></div>
+            <div class="mini-bar" style="height: 75%"></div>
+            <div class="mini-bar" style="height: 85%"></div>
+            <div class="mini-bar" style="height: 60%"></div>
+          </div>
+        </div>
+
+        <!-- Card 2: AI Response Studio -->
+        <div class="bento-card reveal reveal-delay-1">
+          <div class="bento-card-glow"></div>
+          <div class="bento-icon purple">&#9889;</div>
+          <h3>AI Response Studio</h3>
+          <p>
+            Multi-LLM response generation with tone calibration, brand-voice locking, and
+            regulatory compliance checks. Drafts empathetic, de-escalatory replies in under
+            4 seconds per review.
+          </p>
+        </div>
+
+        <!-- Card 3: Crisis Chat Simulator -->
+        <div class="bento-card reveal reveal-delay-2">
+          <div class="bento-card-glow"></div>
+          <div class="bento-icon pink">&#128680;</div>
+          <h3>Crisis Chat Simulator</h3>
+          <p>
+            Real-time crisis war room with interactive chat interface. Simulate viral FUD
+            events, test your team's containment protocols, and benchmark response
+            effectiveness under pressure.
+          </p>
+        </div>
+
+        <!-- Card 4: Sentiment Intelligence -->
+        <div class="bento-card reveal reveal-delay-3">
+          <div class="bento-card-glow"></div>
+          <div class="bento-icon green">&#128200;</div>
+          <h3>Sentiment Intelligence</h3>
+          <p>
+            Deep NLP-powered sentiment classification beyond simple positive/negative.
+            Detects sarcasm, frustration intensity, churn intent signals, and coordinated
+            attack patterns.
+          </p>
+        </div>
+
+        <!-- Card 5: Competitor Benchmarking -->
+        <div class="bento-card span-2 reveal reveal-delay-4">
+          <div class="bento-card-glow"></div>
+          <div class="bento-icon orange">&#127942;</div>
+          <h3>Competitor Benchmark Matrix</h3>
+          <p>
+            Side-by-side reputation scoring against up to 6 competitors. Track response velocity gaps,
+            sentiment drift differentials, and crisis recovery times.
+            Know exactly where you stand — and where your competitors are gaining ground.
+          </p>
+          <div class="terminal-mock">
+            <div><span class="prompt">reputat</span> <span class="cmd">benchmark --target stake.com --competitors roobet,shuffle,bcgame</span></div>
+            <div><span class="output">✓ Ingested 4,218 reviews across 4 platforms</span></div>
+            <div><span class="output">✓ Sentiment delta: Stake trails Shuffle by 12.4pts on response velocity</span></div>
+            <div><span class="warn">⚠ Alert: KYC friction complaints 3.2x above sector median</span></div>
+          </div>
+        </div>
+
+        <!-- Card 6: Executive Risk Reports -->
+        <div class="bento-card reveal reveal-delay-5">
+          <div class="bento-card-glow"></div>
+          <div class="bento-icon blue">&#128196;</div>
+          <h3>Executive Risk Reports</h3>
+          <p>
+            Auto-generated board-ready PDF dossiers with threat heatmaps, ROI projections,
+            and actionable remediation playbooks.
+            Delivered weekly or on-demand.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HOW IT WORKS ═══ -->
+  <section id="how-it-works" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header-center">
+        <div class="section-label reveal">How It Works</div>
+        <h2 class="section-title reveal reveal-delay-1">Threat Detected &#8594; Neutralized. Automatically.</h2>
+        <p class="section-subtitle reveal reveal-delay-2">
+          From raw signal to executive action in four autonomous stages.
+        </p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-step reveal">
+          <div class="timeline-dot">&#128225;</div>
+          <h4>Ingest</h4>
+          <p>Continuous crawlers scan Trustpilot, Reddit, app stores, and social channels every 60 seconds.</p>
+        </div>
+        <div class="timeline-step reveal reveal-delay-1">
+          <div class="timeline-dot">&#129504;</div>
+          <h4>Analyze</h4>
+          <p>Multi-model NLP pipeline classifies sentiment, detects coordination patterns, and scores threat severity.</p>
+        </div>
+        <div class="timeline-step reveal reveal-delay-2">
+          <div class="timeline-dot">&#9889;</div>
+          <h4>Respond</h4>
+          <p>AI Response Studio generates brand-aligned, compliance-checked replies and routes critical alerts to your team.</p>
+        </div>
+        <div class="timeline-step reveal reveal-delay-3">
+          <div class="timeline-dot">&#128737;</div>
+          <h4>Defend</h4>
+          <p>Automated playbooks contain FUD cascades, while executive dashboards track resolution in real time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ LIVE DASHBOARD PREVIEW ═══ -->
+  <section id="dashboard">
+    <div class="container">
+      <div class="section-header-center">
+        <div class="section-label reveal">Live Radar Preview</div>
+        <h2 class="section-title reveal reveal-delay-1">Your Reputation Command Center</h2>
+        <p class="section-subtitle reveal reveal-delay-2">
+          A real-time threat radar that never sleeps. Every mention, every platform, every second.
+        </p>
+      </div>
+      <div class="dashboard-preview reveal reveal-delay-3">
+        <div class="dashboard-topbar">
+          <div class="dot-r"></div>
+          <div class="dot-y"></div>
+          <div class="dot-g"></div>
+          <div class="dashboard-url">reputatai.in/dashboard — live threat monitor</div>
+        </div>
+        <div class="dashboard-body">
+          <div class="dash-panel">
+            <h5>&#128200; Sentiment Breakdown — Last 7 Days</h5>
+            <div class="sentiment-bar-group">
+              <div class="sentiment-row">
+                <div class="sentiment-label">Positive</div>
+                <div class="sentiment-track"><div class="sentiment-fill positive" style="width: 38%"></div></div>
+                <div class="sentiment-pct">38%</div>
+              </div>
+              <div class="sentiment-row">
+                <div class="sentiment-label">Neutral</div>
+                <div class="sentiment-track"><div class="sentiment-fill neutral" style="width: 30%"></div></div>
+                <div class="sentiment-pct">30%</div>
+              </div>
+              <div class="sentiment-row">
+                <div class="sentiment-label">Negative</div>
+                <div class="sentiment-track"><div class="sentiment-fill negative" style="width: 32%"></div></div>
+                <div class="sentiment-pct">32%</div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <h5>&#128680; Live Threat Feed</h5>
+            <div class="alert-feed">
+              <div class="alert-item">
+                <div class="alert-dot crit"></div>
+                Withdrawal delay complaint trending on r/gambling
+                <div class="alert-time">2m ago</div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot warn"></div>
+                KYC friction thread gaining traction — 47 upvotes
+                <div class="alert-time">8m ago</div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot info"></div>
+                Positive VIP experience review posted on Trustpilot
+                <div class="alert-time">14m ago</div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot crit"></div>
+                Coordinated negative review pattern detected
+                <div class="alert-time">22m ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMPARISON TABLE ═══ -->
+  <section id="compare" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header-center">
+        <div class="section-label reveal">Why ReputatAI</div>
+        <h2 class="section-title reveal reveal-delay-1">Built Different. Engineered to Defend.</h2>
+        <p class="section-subtitle reveal reveal-delay-2">
+          Traditional monitoring tools alert you after the damage is done. ReputatAI prevents it.
+        </p>
+      </div>
+      <div class="compare-table-wrap reveal reveal-delay-3">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th class="highlight-col">ReputatAI</th>
+              <th>Brand24</th>
+              <th>Mention</th>
+              <th>Manual Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Real-Time Threat Detection</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AI-Generated Response Drafts</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Crisis Chat Simulation</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Competitor Benchmarking</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Web3 / Gaming Vertical Intelligence</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Auto Executive PDF Reports</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Sub-5-Minute Response SLA</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>FUD Cascade Prevention</td>
+              <td class="highlight-col"><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TECH STACK ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-header-center">
+        <div class="section-label reveal">Under The Hood</div>
+        <h2 class="section-title reveal reveal-delay-1">Enterprise Architecture</h2>
+        <p class="section-subtitle reveal reveal-delay-2">
+          Built on production-grade infrastructure with multi-LLM orchestration,
+          real-time streaming, and zero-downtime deployment.
+        </p>
+      </div>
+      <div class="tech-grid reveal reveal-delay-3">
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>Python 3.12</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>NVIDIA NIM</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Multi-LLM Engine</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-pink)"></div>Streamlit</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>Plotly Analytics</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-blue)"></div>Pydantic v2</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>REST APIs</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>Edge CDN</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Headless PDF</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>WebSocket Feeds</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <div class="cta-glow"></div>
+      <div class="section-label reveal" style="justify-content: center;">Get Started</div>
+      <h2 class="reveal reveal-delay-1">Ready to Defend Your<br><span class="gradient-text">Brand Reputation?</span></h2>
+      <p class="reveal reveal-delay-2">
+        Start with a confidential, zero-risk 14-day pilot.
+        No contracts. No setup fees. Real results within 48 hours.
+      </p>
+      <div class="cta-buttons reveal reveal-delay-3">
+        <a href="mailto:harshit@reputatai.in?subject=ReputatAI%20Demo%20Request" class="btn-primary">
+          <span>&#128231; Request Private Demo</span>
+        </a>
+        <a href="mailto:harshit@reputatai.in?subject=ReputatAI%20Confidential%20Audit" class="btn-secondary">
+          &#128196; Get Your Free Audit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="nav-logo-icon" style="width:28px;height:28px;border-radius:8px;font-size:0.8rem;">R</div>
+          Reputat<span>AI</span>
+        </div>
+        <div class="footer-links">
+          <a href="#features">Platform</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#compare">Compare</a>
+          <a href="mailto:harshit@reputatai.in">Contact</a>
+        </div>
+        <div class="footer-copy">&copy; 2026 ReputatAI. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ SCRIPTS ═══ -->
+  <script>
+    // ─── Scroll Reveal ───
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ─── Navbar scroll effect ───
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ─── Animated metric counters ───
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          const prefix = el.dataset.prefix || '';
+          const suffix = el.dataset.suffix || '';
+          let current = 0;
+          const duration = 2000;
+          const step = target / (duration / 16);
+
+          const tick = () => {
+            current += step;
+            if (current >= target) {
+              el.textContent = prefix + target + suffix;
+            } else {
+              el.textContent = prefix + Math.floor(current) + suffix;
+              requestAnimationFrame(tick);
+            }
+          };
+          requestAnimationFrame(tick);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.metric-number').forEach(el => counterObserver.observe(el));
+
+    // ─── Smooth scroll for anchor links ───
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Close mobile menu
+          document.getElementById('navLinks').classList.remove('open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
