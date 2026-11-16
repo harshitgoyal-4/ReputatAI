@@ -690,7 +690,27 @@
       font-size:0.86rem; color:var(--t2); line-height:1.65;
     }
 
-    /* ── RESPONSIVE ── */
+    /* ── FLEXIBLE ADD-ON CALLOUT ── */
+    .addon-callout {
+      margin-top:18px; padding:16px 18px;
+      background:rgba(0,212,255,0.03); border:1px solid rgba(0,212,255,0.18); border-radius:12px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .addon-callout-top {
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    }
+    .addon-tag {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 10px; border-radius:50px;
+      background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.22);
+      color:var(--cyan); font-family:'JetBrains Mono',monospace;
+      font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    }
+    .addon-tag-dot { width:5px; height:5px; border-radius:50%; background:var(--cyan); box-shadow:0 0 6px var(--cyan); }
+    .addon-turnaround { font-size:0.72rem; color:var(--green); font-family:'JetBrains Mono',monospace; font-weight:700; }
+    .addon-callout-text { font-size:0.84rem; color:var(--t2); line-height:1.6; }
+
+    /* ── RESPONSIVE MEDIA QUERIES (CLEAN CASCADE) ── */
     @media(max-width:1024px) {
       .bento { grid-template-columns:repeat(6,1fr); }
       .b-8,.b-4 { grid-column:span 6; }
@@ -701,8 +721,17 @@
       .lead-info { border-right:none; border-bottom:1px solid var(--border); padding:36px; }
       .lead-form-wrap { padding:36px; }
     }
+    @media(max-width:960px) {
+      .nav-links { display:none; }
+      .ham { display:flex; }
+      .nav-links.open {
+        display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0;
+        background:rgba(5,5,8,0.98); backdrop-filter:blur(24px); padding:28px; gap:22px; border-bottom:1px solid var(--border);
+        box-shadow:0 20px 40px rgba(0,0,0,0.8);
+      }
+    }
     @media(max-width:768px) {
-      section { padding:90px 0; }
+      section { padding:80px 0; }
       .bento { grid-template-columns:1fr; }
       .b-8,.b-4 { grid-column:span 1; }
       .proc-grid { grid-template-columns:1fr; }
@@ -717,17 +746,14 @@
       .tbl { min-width:600px; }
       .form-row { grid-template-columns:1fr; }
     }
-    @media(max-width:960px) {
-      .nav-links { display:none; }
-      .ham { display:flex; }
-      .nav-links.open {
-        display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0;
-        background:rgba(5,5,8,0.98); backdrop-filter:blur(24px); padding:28px; gap:22px; border-bottom:1px solid var(--border);
-        box-shadow:0 20px 40px rgba(0,0,0,0.8);
-      }
-    }
     @media(max-width:640px) {
+      .wrap { padding:0 18px; }
+      .gcard-inner { padding:26px 20px; }
+      .radar-panel { padding:24px 18px; }
+      .sim-col { padding:24px 18px; }
+      .lead-form-wrap, .lead-info { padding:28px 18px; }
       .trust-grid { grid-template-columns:1fr; }
+      .sim-btn { font-size:0.78rem; padding:8px 14px; width:100%; text-align:center; }
     }
   </style>
 </head>
@@ -890,9 +916,14 @@
             <div class="feat-icon fi-cyan">&#128269;</div>
             <h3>Review Explorer &amp; Ingestion Engine</h3>
             <p>Continuously monitors Trustpilot, Google Reviews, Reddit threads, Hacker News, app stores, and 12+ social signals. Aggregates mentions into a unified risk timeline with anomaly spike alerts.</p>
-            <div style="margin-top:14px; padding:10px 14px; background:rgba(0,212,255,0.04); border:1px solid rgba(0,212,255,0.15); border-radius:8px; display:flex; align-items:center; gap:10px;">
-              <span style="color:var(--cyan); font-weight:800; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0;">⚡ Flexible Add-Ons:</span>
-              <span style="font-size:0.78rem; color:var(--t2);">Need Sitejabber, Discord, Telegram, or niche gambling/fintech forums? We build and connect bespoke site add-ons within 48h upon request.</span>
+            <div class="addon-callout">
+              <div class="addon-callout-top">
+                <div class="addon-tag"><span class="addon-tag-dot"></span>Flexible Custom Add-Ons</div>
+                <span class="addon-turnaround">+ 48h Turnaround</span>
+              </div>
+              <p class="addon-callout-text">
+                Need <strong>Sitejabber, Telegram, Discord</strong>, or proprietary forums? We build and connect custom crawler add-ons on demand within 48 hours.
+              </p>
             </div>
             <div class="spark">
               <div class="spark-bar" style="height:25%"></div>
