@@ -4,628 +4,631 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ReputatAI — AI-Powered Reputation Intelligence & Crisis Defense</title>
-  <meta name="description" content="Real-time sentiment intelligence, automated crisis defense, and reputation risk analytics for Web3, gaming, and high-velocity digital platforms.">
+  <meta name="description" content="Real-time sentiment intelligence, automated crisis defense, and reputation risk analytics for digital platforms.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════════
-       RESET & BASE
-       ═══════════════════════════════════════════ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg-primary: #06060b;
-      --bg-secondary: #0c0c14;
-      --bg-card: rgba(14, 14, 24, 0.6);
-      --border-subtle: rgba(255, 255, 255, 0.06);
-      --border-glow: rgba(0, 212, 255, 0.15);
-      --text-primary: #f0f0f5;
-      --text-secondary: #8a8a9a;
-      --text-muted: #55556a;
-      --accent-cyan: #00d4ff;
-      --accent-blue: #3b82f6;
-      --accent-purple: #7c3aed;
-      --accent-pink: #ec4899;
-      --accent-green: #10b981;
-      --accent-orange: #f59e0b;
-      --accent-red: #ef4444;
-      --glow-cyan: 0 0 40px rgba(0, 212, 255, 0.15);
-      --glow-purple: 0 0 40px rgba(124, 58, 237, 0.15);
-      --radius: 16px;
-      --radius-sm: 10px;
-      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --bg: #050508;
+      --bg2: #0a0a10;
+      --bg3: #0e0e18;
+      --card: rgba(12, 12, 20, 0.5);
+      --border: rgba(255,255,255,0.04);
+      --border-h: rgba(0,212,255,0.12);
+      --t1: #f0f0f5;
+      --t2: #8a8a9a;
+      --t3: #4a4a5a;
+      --cyan: #00d4ff;
+      --blue: #3b82f6;
+      --purple: #7c3aed;
+      --pink: #ec4899;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --r: 16px;
     }
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg); color: var(--t1);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
     a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; height: auto; }
 
-    /* ═══════════════════════════════════════════
-       ANIMATED BACKGROUND
-       ═══════════════════════════════════════════ */
-    .bg-grid {
+    /* ── CURSOR GLOW ── */
+    .cursor-glow {
+      position: fixed; width: 600px; height: 600px;
+      border-radius: 50%; pointer-events: none; z-index: 0;
+      background: radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    .noise {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 128px 128px;
+    }
+
+    /* ── GRID ── */
+    .grid-bg {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-    .bg-orb {
-      position: fixed; border-radius: 50%; filter: blur(120px);
-      pointer-events: none; z-index: 0;
-    }
-    .bg-orb-1 {
-      width: 600px; height: 600px; top: -200px; right: -200px;
-      background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%);
-      animation: orbFloat1 20s ease-in-out infinite;
-    }
-    .bg-orb-2 {
-      width: 500px; height: 500px; bottom: 10%; left: -150px;
-      background: radial-gradient(circle, rgba(124,58,237,0.08), transparent 70%);
-      animation: orbFloat2 25s ease-in-out infinite;
-    }
-    .bg-orb-3 {
-      width: 400px; height: 400px; top: 50%; right: 10%;
-      background: radial-gradient(circle, rgba(236,72,153,0.05), transparent 70%);
-      animation: orbFloat3 18s ease-in-out infinite;
-    }
-    @keyframes orbFloat1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(-80px, 60px) scale(1.1); }
-      66% { transform: translate(40px, -40px) scale(0.95); }
-    }
-    @keyframes orbFloat2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(100px, -80px) scale(1.15); }
-    }
-    @keyframes orbFloat3 {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-60px, 60px); }
+        linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
     }
 
-    /* ═══════════════════════════════════════════
-       SCROLL REVEAL ANIMATIONS
-       ═══════════════════════════════════════════ */
-    .reveal {
-      opacity: 0; transform: translateY(40px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-    .reveal-delay-5 { transition-delay: 0.5s; }
+    /* ── ORBS ── */
+    .orb { position: fixed; border-radius: 50%; filter: blur(140px); pointer-events: none; z-index: 0; }
+    .orb-1 { width: 700px; height: 700px; top: -300px; left: -200px;
+      background: radial-gradient(circle, rgba(0,212,255,0.07), transparent 70%);
+      animation: o1 25s ease-in-out infinite; }
+    .orb-2 { width: 500px; height: 500px; bottom: 5%; right: -100px;
+      background: radial-gradient(circle, rgba(124,58,237,0.06), transparent 70%);
+      animation: o2 30s ease-in-out infinite; }
+    .orb-3 { width: 400px; height: 400px; top: 40%; left: 30%;
+      background: radial-gradient(circle, rgba(236,72,153,0.04), transparent 70%);
+      animation: o3 20s ease-in-out infinite; }
+    @keyframes o1 { 0%,100%{transform:translate(0,0)scale(1)} 50%{transform:translate(80px,60px)scale(1.1)} }
+    @keyframes o2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-80px,-60px)scale(1.15)} }
+    @keyframes o3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(50px,-50px)} }
 
-    /* ═══════════════════════════════════════════
-       LAYOUT
-       ═══════════════════════════════════════════ */
-    .container {
-      max-width: 1200px; margin: 0 auto; padding: 0 24px;
-      position: relative; z-index: 1;
-    }
-    section { padding: 120px 0; position: relative; }
+    /* ── REVEAL ── */
+    .rv { opacity:0; transform:translateY(50px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .rv.vis { opacity:1; transform:translateY(0); }
+    .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s} .d5{transition-delay:.5s} .d6{transition-delay:.6s}
 
-    /* ═══════════════════════════════════════════
-       NAVIGATION
-       ═══════════════════════════════════════════ */
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+    section { padding: 140px 0; position: relative; }
+
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      padding: 16px 0;
-      background: rgba(6, 6, 11, 0.7);
-      backdrop-filter: blur(20px) saturate(1.2);
-      -webkit-backdrop-filter: blur(20px) saturate(1.2);
-      border-bottom: 1px solid var(--border-subtle);
-      transition: var(--transition);
+      padding: 18px 0; background: rgba(5,5,8,0.6);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
     }
-    nav.scrolled { padding: 10px 0; background: rgba(6, 6, 11, 0.92); }
-    .nav-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      max-width: 1200px; margin: 0 auto; padding: 0 24px;
-    }
-    .nav-logo {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 800; font-size: 1.25rem; letter-spacing: -0.03em;
-    }
-    .nav-logo-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 900; color: #fff;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-    }
-    .nav-logo span { color: var(--accent-cyan); }
-    .nav-links { display: flex; gap: 32px; align-items: center; }
-    .nav-links a {
-      font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);
-      transition: color 0.3s; position: relative;
-    }
-    .nav-links a:hover { color: var(--text-primary); }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 2px;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-      transition: width 0.3s;
-    }
-    .nav-links a:hover::after { width: 100%; }
-    .nav-cta {
-      padding: 9px 22px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      color: #fff; transition: var(--transition); cursor: pointer;
-      border: none;
-    }
-    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3); }
-
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary); border-radius: 2px; transition: var(--transition); }
-
-    /* ═══════════════════════════════════════════
-       HERO
-       ═══════════════════════════════════════════ */
-    .hero {
-      min-height: 100vh; display: flex; align-items: center;
-      padding-top: 100px; padding-bottom: 80px;
-      position: relative; overflow: hidden;
-    }
-    .hero-content { max-width: 800px; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 16px 6px 8px; border-radius: 50px;
-      background: rgba(0, 212, 255, 0.08);
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      font-size: 0.8rem; font-weight: 500; color: var(--accent-cyan);
-      margin-bottom: 28px; backdrop-filter: blur(10px);
-    }
-    .hero-badge-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 10px var(--accent-green);
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.3); }
-    }
-    .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
-      font-weight: 900; line-height: 1.05;
-      letter-spacing: -0.04em; margin-bottom: 24px;
-    }
-    .hero h1 .gradient-text {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 1.2rem; line-height: 1.7;
-      color: var(--text-secondary); max-width: 600px; margin-bottom: 40px;
-    }
-    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 32px; border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      font-weight: 600; font-size: 1rem; color: #fff;
-      transition: var(--transition); cursor: pointer; border: none;
-      position: relative; overflow: hidden;
-    }
-    .btn-primary::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-      opacity: 0; transition: opacity 0.4s;
-    }
-    .btn-primary:hover::before { opacity: 1; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3); }
-    .btn-primary span { position: relative; z-index: 1; }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 32px; border-radius: var(--radius-sm);
-      background: transparent;
-      border: 1px solid var(--border-glow);
-      font-weight: 600; font-size: 1rem; color: var(--text-primary);
-      transition: var(--transition); cursor: pointer;
-      backdrop-filter: blur(10px);
-    }
-    .btn-secondary:hover {
-      border-color: var(--accent-cyan);
-      background: rgba(0, 212, 255, 0.05);
-      transform: translateY(-2px);
-    }
-    .hero-visual {
-      position: absolute; right: -80px; top: 50%; transform: translateY(-50%);
-      width: 550px; height: 550px; pointer-events: none; opacity: 0.7;
-    }
-    .hero-ring {
-      position: absolute; border-radius: 50%;
-      border: 1px solid rgba(0, 212, 255, 0.1);
-    }
-    .hero-ring-1 { inset: 0; animation: spin 40s linear infinite; }
-    .hero-ring-2 { inset: 60px; animation: spin 30s linear infinite reverse; border-color: rgba(124,58,237,0.1); }
-    .hero-ring-3 { inset: 120px; animation: spin 20s linear infinite; border-color: rgba(236,72,153,0.08); }
-    .hero-ring-dot {
-      position: absolute; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent-cyan); box-shadow: 0 0 15px var(--accent-cyan);
-    }
-    .hero-ring-1 .hero-ring-dot { top: 0; left: 50%; }
-    .hero-ring-2 .hero-ring-dot { bottom: 0; right: 20%; background: var(--accent-purple); box-shadow: 0 0 15px var(--accent-purple); }
-    .hero-ring-3 .hero-ring-dot { top: 30%; left: 0; background: var(--accent-pink); box-shadow: 0 0 15px var(--accent-pink); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ═══════════════════════════════════════════
-       METRICS BAR
-       ═══════════════════════════════════════════ */
-    .metrics-bar {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-      background: var(--border-subtle); border-radius: var(--radius);
-      overflow: hidden; margin-top: -60px; position: relative; z-index: 2;
-    }
-    .metric-item {
-      background: var(--bg-secondary); padding: 36px 28px; text-align: center;
-      transition: var(--transition);
-    }
-    .metric-item:hover { background: rgba(14, 14, 24, 0.9); }
-    .metric-number {
-      font-size: 2.4rem; font-weight: 800; letter-spacing: -0.03em;
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 6px;
-    }
-    .metric-number.cyan { color: var(--accent-cyan); }
-    .metric-number.purple { color: var(--accent-purple); }
-    .metric-number.green { color: var(--accent-green); }
-    .metric-number.blue { color: var(--accent-blue); }
-    .metric-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
-
-    /* ═══════════════════════════════════════════
-       SECTION HEADERS
-       ═══════════════════════════════════════════ */
-    .section-label {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.12em; color: var(--accent-cyan); margin-bottom: 16px;
-    }
-    .section-label::before {
-      content: ''; width: 20px; height: 1px;
-      background: linear-gradient(90deg, var(--accent-cyan), transparent);
-    }
-    .section-title {
-      font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
-      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px;
-    }
-    .section-subtitle {
-      font-size: 1.1rem; color: var(--text-secondary);
-      line-height: 1.7; max-width: 620px;
-    }
-    .section-header-center { text-align: center; }
-    .section-header-center .section-subtitle { margin: 0 auto; }
-
-    /* ═══════════════════════════════════════════
-       FEATURES – BENTO GRID
-       ═══════════════════════════════════════════ */
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto auto;
-      gap: 16px; margin-top: 60px;
-    }
-    .bento-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius); padding: 36px;
-      position: relative; overflow: hidden;
-      transition: var(--transition);
-      backdrop-filter: blur(10px);
-    }
-    .bento-card:hover {
-      border-color: var(--border-glow);
-      transform: translateY(-4px);
-      box-shadow: var(--glow-cyan);
-    }
-    .bento-card.span-2 { grid-column: span 2; }
-    .bento-card-glow {
-      position: absolute; top: -1px; left: 20%; right: 20%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-      opacity: 0; transition: opacity 0.4s;
-    }
-    .bento-card:hover .bento-card-glow { opacity: 1; }
-    .bento-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; margin-bottom: 20px;
-    }
-    .bento-icon.cyan { background: rgba(0, 212, 255, 0.1); color: var(--accent-cyan); }
-    .bento-icon.purple { background: rgba(124, 58, 237, 0.1); color: var(--accent-purple); }
-    .bento-icon.pink { background: rgba(236, 72, 153, 0.1); color: var(--accent-pink); }
-    .bento-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
-    .bento-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
-    .bento-icon.blue { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
-    .bento-card h3 {
-      font-size: 1.2rem; font-weight: 700; margin-bottom: 10px;
-      letter-spacing: -0.02em;
-    }
-    .bento-card p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; }
-
-    /* Mini chart inside bento card */
-    .mini-chart {
-      display: flex; align-items: flex-end; gap: 3px;
-      height: 60px; margin-top: 20px; padding-top: 10px;
-      border-top: 1px solid var(--border-subtle);
-    }
-    .mini-bar {
-      flex: 1; border-radius: 3px 3px 0 0;
-      background: linear-gradient(to top, var(--accent-cyan), rgba(0,212,255,0.3));
-      animation: barGrow 1.5s ease-out forwards;
-      transform-origin: bottom;
-    }
-    @keyframes barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-
-    /* Live terminal mockup */
-    .terminal-mock {
-      margin-top: 20px; padding: 16px;
-      background: rgba(0,0,0,0.4); border-radius: var(--radius-sm);
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
-      line-height: 1.8; color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-    }
-    .terminal-mock .prompt { color: var(--accent-green); }
-    .terminal-mock .cmd { color: var(--text-primary); }
-    .terminal-mock .output { color: var(--accent-cyan); }
-    .terminal-mock .warn { color: var(--accent-orange); }
-
-    /* ═══════════════════════════════════════════
-       HOW IT WORKS – TIMELINE
-       ═══════════════════════════════════════════ */
-    .timeline {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
-      margin-top: 60px; position: relative;
-    }
-    .timeline::before {
-      content: ''; position: absolute;
-      top: 36px; left: 12.5%; right: 12.5%; height: 2px;
-      background: linear-gradient(90deg,
-        var(--accent-cyan), var(--accent-blue),
-        var(--accent-purple), var(--accent-pink));
-      opacity: 0.3;
-    }
-    .timeline-step { text-align: center; position: relative; }
-    .timeline-dot {
-      width: 72px; height: 72px; border-radius: 50%;
-      margin: 0 auto 20px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem;
-      background: var(--bg-secondary);
-      border: 2px solid var(--border-glow);
-      transition: var(--transition); position: relative; z-index: 1;
-    }
-    .timeline-step:hover .timeline-dot {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-    }
-    .timeline-step h4 {
-      font-size: 1rem; font-weight: 700; margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-    .timeline-step p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
-
-    /* ═══════════════════════════════════════════
-       THREAT RADAR – LIVE DASHBOARD PREVIEW
-       ═══════════════════════════════════════════ */
-    .dashboard-preview {
-      margin-top: 60px; border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
-      overflow: hidden;
-      background: var(--bg-card);
-      backdrop-filter: blur(10px);
-    }
-    .dashboard-topbar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 20px;
-      background: rgba(0,0,0,0.3);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .dot-r { width: 12px; height: 12px; border-radius: 50%; background: #ef4444; }
-    .dot-y { width: 12px; height: 12px; border-radius: 50%; background: #f59e0b; }
-    .dot-g { width: 12px; height: 12px; border-radius: 50%; background: #10b981; }
-    .dashboard-url {
-      flex: 1; text-align: center; font-size: 0.75rem;
-      color: var(--text-muted); font-family: 'JetBrains Mono', monospace;
-    }
-    .dashboard-body {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-      background: var(--border-subtle);
-    }
-    .dash-panel { background: var(--bg-secondary); padding: 32px; }
-    .dash-panel h5 {
-      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--text-muted); margin-bottom: 16px;
-    }
-    .sentiment-bar-group { display: flex; flex-direction: column; gap: 12px; }
-    .sentiment-row { display: flex; align-items: center; gap: 12px; }
-    .sentiment-label { font-size: 0.82rem; color: var(--text-secondary); width: 80px; }
-    .sentiment-track {
-      flex: 1; height: 8px; background: rgba(255,255,255,0.05);
-      border-radius: 4px; overflow: hidden;
-    }
-    .sentiment-fill {
-      height: 100%; border-radius: 4px;
-      animation: fillBar 2s ease-out forwards;
-      transform-origin: left;
-    }
-    @keyframes fillBar { from { width: 0; } }
-    .sentiment-fill.positive { background: linear-gradient(90deg, var(--accent-green), #34d399); }
-    .sentiment-fill.neutral { background: linear-gradient(90deg, var(--accent-blue), #60a5fa); }
-    .sentiment-fill.negative { background: linear-gradient(90deg, var(--accent-red), #f87171); }
-    .sentiment-pct { font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; color: var(--text-primary); width: 40px; text-align: right; }
-
-    .alert-feed { display: flex; flex-direction: column; gap: 10px; }
-    .alert-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: var(--radius-sm);
-      background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle);
-      font-size: 0.82rem; color: var(--text-secondary);
-    }
-    .alert-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-    }
-    .alert-dot.crit { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
-    .alert-dot.warn { background: var(--accent-orange); box-shadow: 0 0 8px var(--accent-orange); }
-    .alert-dot.info { background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
-    .alert-time { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); }
-
-    /* ═══════════════════════════════════════════
-       ARCHITECTURE / TECH STACK
-       ═══════════════════════════════════════════ */
-    .tech-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px; margin-top: 40px;
-    }
-    .tech-pill {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 18px; border-radius: var(--radius-sm);
-      background: var(--bg-card); border: 1px solid var(--border-subtle);
-      font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);
-      transition: var(--transition);
-    }
-    .tech-pill:hover { border-color: var(--border-glow); color: var(--text-primary); }
-    .tech-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-    /* ═══════════════════════════════════════════
-       COMPARISON TABLE
-       ═══════════════════════════════════════════ */
-    .compare-table-wrap {
-      margin-top: 60px; border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
-      overflow: hidden;
-    }
-    .compare-table { width: 100%; border-collapse: collapse; }
-    .compare-table th, .compare-table td {
-      padding: 16px 20px; text-align: left;
-      border-bottom: 1px solid var(--border-subtle);
-      font-size: 0.88rem;
-    }
-    .compare-table thead th {
-      background: rgba(0,0,0,0.3); font-weight: 600;
-      font-size: 0.78rem; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--text-muted);
-    }
-    .compare-table thead th:first-child { color: var(--text-primary); }
-    .compare-table tbody tr { background: var(--bg-secondary); transition: background 0.3s; }
-    .compare-table tbody tr:hover { background: rgba(0, 212, 255, 0.03); }
-    .compare-table td:first-child { font-weight: 600; color: var(--text-primary); }
-    .compare-table .check { color: var(--accent-green); font-weight: 700; }
-    .compare-table .cross { color: var(--text-muted); }
-    .compare-table .highlight-col { background: rgba(0, 212, 255, 0.04); }
-    .compare-table thead .highlight-col {
-      color: var(--accent-cyan); position: relative;
-    }
-    .compare-table thead .highlight-col::after {
-      content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-    }
-
-    /* ═══════════════════════════════════════════
-       CTA SECTION
-       ═══════════════════════════════════════════ */
-    .cta-section {
-      text-align: center; padding: 120px 0;
+    nav.scrolled { padding: 12px 0; background: rgba(5,5,8,0.92); }
+    .nav-in { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 28px; }
+    .logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.3rem; letter-spacing:-0.03em; }
+    .logo-box {
+      width:38px; height:38px; border-radius:10px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      display:flex; align-items:center; justify-content:center;
+      font-size:1rem; font-weight:900; color:#fff;
+      box-shadow: 0 0 25px rgba(0,212,255,0.3);
       position: relative;
     }
+    .logo-box::after {
+      content:''; position:absolute; inset:-2px; border-radius:12px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      z-index:-1; opacity:0.4; filter:blur(8px);
+    }
+    .logo em { font-style:normal; color:var(--cyan); }
+    .nav-links { display:flex; gap:36px; align-items:center; }
+    .nav-links a { font-size:0.88rem; font-weight:500; color:var(--t2); transition:color 0.3s; }
+    .nav-links a:hover { color:var(--t1); }
+    .nav-cta {
+      padding:10px 24px; border-radius:8px; font-size:0.85rem; font-weight:600;
+      background:linear-gradient(135deg, var(--cyan), var(--blue));
+      color:#fff; transition:all 0.4s; cursor:pointer; border:none;
+    }
+    .nav-cta:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,212,255,0.25); }
+    .ham { display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:4px; }
+    .ham span { display:block; width:22px; height:2px; background:var(--t2); border-radius:2px; }
+
+    /* ── HERO ── */
+    .hero { min-height:100vh; display:flex; align-items:center; padding-top:100px; position:relative; overflow:hidden; }
+    .hero-inner { max-width:780px; }
+    .hero-tag {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:7px 18px 7px 10px; border-radius:50px;
+      background: rgba(0,212,255,0.06); border:1px solid rgba(0,212,255,0.15);
+      font-size:0.8rem; font-weight:500; color:var(--cyan);
+      margin-bottom:32px; backdrop-filter:blur(10px);
+    }
+    .pulse-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--green); box-shadow:0 0 12px var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+    .hero h1 {
+      font-size: clamp(3rem, 6.5vw, 5rem);
+      font-weight:900; line-height:1.02; letter-spacing:-0.045em;
+      margin-bottom:28px;
+    }
+    .grad {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--blue) 40%, var(--purple) 70%, var(--pink) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; background-size:200% 200%;
+      animation: gradShift 6s ease-in-out infinite;
+    }
+    @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+    .hero p { font-size:1.25rem; line-height:1.7; color:var(--t2); max-width:580px; margin-bottom:44px; }
+    .hero-btns { display:flex; gap:16px; flex-wrap:wrap; }
+
+    /* ── BUTTONS ── */
+    .btn-glow {
+      position:relative; display:inline-flex; align-items:center; gap:8px;
+      padding:15px 36px; border-radius:12px;
+      font-weight:700; font-size:1rem; color:#fff; border:none; cursor:pointer;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      overflow:hidden; z-index:1;
+    }
+    .btn-glow::before {
+      content:''; position:absolute; inset:-2px; border-radius:14px;
+      background:linear-gradient(135deg, var(--cyan), var(--blue), var(--purple));
+      z-index:-2; opacity:0.5; filter:blur(12px);
+      transition: opacity 0.4s;
+    }
+    .btn-glow::after {
+      content:''; position:absolute; inset:0; border-radius:12px;
+      background:linear-gradient(135deg, var(--blue), var(--purple));
+      opacity:0; transition:opacity 0.4s; z-index:-1;
+    }
+    .btn-glow:hover::after { opacity:1; }
+    .btn-glow:hover { transform:translateY(-3px); }
+    .btn-glow:hover::before { opacity:0.8; }
+
+    .btn-glass {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:15px 36px; border-radius:12px;
+      font-weight:600; font-size:1rem; color:var(--t1);
+      background:rgba(255,255,255,0.03); border:1px solid var(--border-h);
+      backdrop-filter:blur(10px); cursor:pointer;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-glass:hover { border-color:var(--cyan); background:rgba(0,212,255,0.04); transform:translateY(-3px); }
+
+    /* ── ANIMATED RINGS (Hero) ── */
+    .hero-vis {
+      position:absolute; right:-120px; top:50%; transform:translateY(-50%);
+      width:600px; height:600px; pointer-events:none;
+    }
+    .ring { position:absolute; border-radius:50%; }
+    .ring-1 {
+      inset:0; border:1px solid rgba(0,212,255,0.08);
+      animation: spin 45s linear infinite;
+    }
+    .ring-2 {
+      inset:70px; border:1px solid rgba(124,58,237,0.08);
+      animation: spin 35s linear infinite reverse;
+    }
+    .ring-3 {
+      inset:140px; border:1px solid rgba(236,72,153,0.06);
+      animation: spin 25s linear infinite;
+    }
+    /* Shield icon in center */
+    .ring-center {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:80px; height:80px; border-radius:50%;
+      background:radial-gradient(circle, rgba(0,212,255,0.12), transparent);
+      display:flex; align-items:center; justify-content:center;
+      font-size:2.2rem;
+      animation: shieldPulse 3s ease-in-out infinite;
+    }
+    @keyframes shieldPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,212,255,0.15)} 50%{box-shadow:0 0 0 30px rgba(0,212,255,0)} }
+    .rdot {
+      position:absolute; width:6px; height:6px; border-radius:50%;
+      box-shadow:0 0 12px currentColor;
+    }
+    .ring-1 .rdot { top:0; left:50%; color:var(--cyan); background:var(--cyan); }
+    .ring-2 .rdot { bottom:10%; right:5%; color:var(--purple); background:var(--purple); }
+    .ring-3 .rdot { top:20%; left:0; color:var(--pink); background:var(--pink); }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* ── METRICS MARQUEE ── */
+    .marquee-wrap {
+      margin-top:-70px; position:relative; z-index:2;
+      overflow:hidden; padding:28px 0;
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+      background:rgba(5,5,8,0.7); backdrop-filter:blur(20px);
+    }
+    .marquee-track {
+      display:flex; gap:60px; width:max-content;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    .mq-item {
+      display:flex; align-items:center; gap:14px;
+      font-size:0.88rem; font-weight:500; color:var(--t2);
+      white-space:nowrap;
+    }
+    .mq-num {
+      font-family:'JetBrains Mono',monospace; font-weight:700;
+      font-size:1.5rem; letter-spacing:-0.02em;
+    }
+    .mq-sep { width:4px; height:4px; border-radius:50%; background:var(--t3); flex-shrink:0; }
+
+    /* ── SECTION HEADERS ── */
+    .stag {
+      display:inline-flex; align-items:center; gap:10px;
+      font-size:0.75rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.14em; color:var(--cyan); margin-bottom:18px;
+    }
+    .stag::before {
+      content:''; width:24px; height:2px;
+      background:linear-gradient(90deg, var(--cyan), transparent);
+    }
+    .stitle {
+      font-size:clamp(2.2rem, 4.5vw, 3.4rem); font-weight:900;
+      letter-spacing:-0.035em; line-height:1.1; margin-bottom:18px;
+    }
+    .ssub { font-size:1.1rem; color:var(--t2); line-height:1.75; max-width:600px; }
+    .centered { text-align:center; }
+    .centered .ssub { margin:0 auto; }
+
+    /* ── GRADIENT BORDER CARD ── */
+    .gcard {
+      position:relative; border-radius:var(--r); overflow:hidden;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1),
+                  box-shadow 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .gcard::before {
+      content:''; position:absolute; inset:0;
+      border-radius:var(--r); padding:1px;
+      background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.1), rgba(236,72,153,0.05));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity:0; transition: opacity 0.4s;
+    }
+    .gcard:hover::before { opacity:1; }
+    .gcard:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(0,212,255,0.06); }
+    .gcard-inner {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); padding:40px;
+      backdrop-filter:blur(12px); height:100%;
+    }
+    /* Top glow line */
+    .gcard-glow {
+      position:absolute; top:0; left:15%; right:15%; height:1px;
+      background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity:0; transition:opacity 0.5s;
+    }
+    .gcard:hover .gcard-glow { opacity:0.8; }
+
+    /* ── BENTO GRID ── */
+    .bento {
+      display:grid; grid-template-columns:repeat(12, 1fr);
+      gap:18px; margin-top:64px;
+    }
+    .b-8 { grid-column:span 8; }
+    .b-4 { grid-column:span 4; }
+    .b-6 { grid-column:span 6; }
+    .b-12 { grid-column:span 12; }
+
+    .feat-icon {
+      width:52px; height:52px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; margin-bottom:22px;
+      position:relative;
+    }
+    .feat-icon::after {
+      content:''; position:absolute; inset:-4px; border-radius:18px;
+      opacity:0.2; filter:blur(10px); z-index:-1;
+    }
+    .fi-cyan { background:rgba(0,212,255,0.1); color:var(--cyan); }
+    .fi-cyan::after { background:var(--cyan); }
+    .fi-purple { background:rgba(124,58,237,0.1); color:var(--purple); }
+    .fi-purple::after { background:var(--purple); }
+    .fi-pink { background:rgba(236,72,153,0.1); color:var(--pink); }
+    .fi-pink::after { background:var(--pink); }
+    .fi-green { background:rgba(16,185,129,0.1); color:var(--green); }
+    .fi-green::after { background:var(--green); }
+    .fi-orange { background:rgba(245,158,11,0.1); color:var(--orange); }
+    .fi-orange::after { background:var(--orange); }
+    .fi-blue { background:rgba(59,130,246,0.1); color:var(--blue); }
+    .fi-blue::after { background:var(--blue); }
+
+    .gcard h3 { font-size:1.25rem; font-weight:700; margin-bottom:10px; letter-spacing:-0.02em; }
+    .gcard p { font-size:0.92rem; color:var(--t2); line-height:1.7; }
+
+    /* Mini sparkline chart */
+    .spark { display:flex; align-items:flex-end; gap:3px; height:60px; margin-top:22px; padding-top:14px; border-top:1px solid var(--border); }
+    .spark-bar {
+      flex:1; border-radius:3px 3px 0 0; min-width:4px;
+      background:linear-gradient(to top, var(--cyan), rgba(0,212,255,0.2));
+      animation: bGrow 1.5s ease-out forwards;
+      transform-origin:bottom;
+    }
+    @keyframes bGrow { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+
+    /* Terminal mock */
+    .term {
+      margin-top:22px; padding:18px;
+      background:rgba(0,0,0,0.5); border-radius:12px;
+      font-family:'JetBrains Mono',monospace; font-size:0.76rem; line-height:1.9;
+      color:var(--t2); border:1px solid var(--border);
+    }
+    .term .pr { color:var(--green); }
+    .term .cm { color:var(--t1); }
+    .term .ok { color:var(--cyan); }
+    .term .wr { color:var(--orange); }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:28px;
+      margin-top:64px; position:relative;
+    }
+    .steps::before {
+      content:''; position:absolute; top:44px; left:12.5%; right:12.5%; height:2px;
+      background:linear-gradient(90deg, var(--cyan), var(--blue), var(--purple), var(--pink));
+      opacity:0.2; border-radius:2px;
+    }
+    .step { text-align:center; position:relative; }
+    .step-icon {
+      width:88px; height:88px; border-radius:50%; margin:0 auto 24px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.8rem; background:var(--bg2);
+      position:relative; z-index:1;
+      transition: all 0.4s;
+    }
+    /* Animated gradient ring around step icon */
+    .step-icon::before {
+      content:''; position:absolute; inset:-2px; border-radius:50%;
+      background:conic-gradient(from 0deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+      z-index:-1; opacity:0.2;
+      animation: stepRingSpin 8s linear infinite;
+    }
+    @keyframes stepRingSpin { to{transform:rotate(360deg)} }
+    .step:hover .step-icon { box-shadow:0 0 40px rgba(0,212,255,0.15); }
+    .step:hover .step-icon::before { opacity:0.5; }
+    .step h4 { font-size:1.05rem; font-weight:700; margin-bottom:10px; }
+    .step p { font-size:0.88rem; color:var(--t2); line-height:1.65; }
+
+    /* ── LIVE RADAR ── */
+    .radar-card {
+      margin-top:64px; border-radius:var(--r); overflow:hidden;
+      position:relative;
+    }
+    .radar-card::before {
+      content:''; position:absolute; inset:0; border-radius:var(--r); padding:1px;
+      background:conic-gradient(from 0deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+      -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude;
+      opacity:0.15; animation:stepRingSpin 12s linear infinite;
+    }
+    .radar-inner {
+      background:var(--bg2); border-radius:var(--r); overflow:hidden;
+    }
+    .radar-topbar {
+      display:flex; align-items:center; gap:8px;
+      padding:14px 22px; background:rgba(0,0,0,0.4);
+      border-bottom:1px solid var(--border);
+    }
+    .dot-r { width:12px; height:12px; border-radius:50%; background:#ef4444; }
+    .dot-y { width:12px; height:12px; border-radius:50%; background:#f59e0b; }
+    .dot-g { width:12px; height:12px; border-radius:50%; background:#10b981; }
+    .radar-url {
+      flex:1; text-align:center; font-size:0.75rem;
+      color:var(--t3); font-family:'JetBrains Mono',monospace;
+    }
+    .radar-body { display:grid; grid-template-columns:1fr 1.3fr; }
+    .radar-panel { padding:36px; }
+    .radar-panel:first-child { border-right:1px solid var(--border); }
+    .radar-panel h5 {
+      font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em;
+      color:var(--t3); margin-bottom:20px; font-weight:600;
+    }
+
+    /* Sentiment bars */
+    .sbar-group { display:flex; flex-direction:column; gap:14px; }
+    .sbar-row { display:flex; align-items:center; gap:14px; }
+    .sbar-label { font-size:0.82rem; color:var(--t2); width:76px; }
+    .sbar-track { flex:1; height:10px; background:rgba(255,255,255,0.04); border-radius:6px; overflow:hidden; }
+    .sbar-fill { height:100%; border-radius:6px; transition:width 2s ease-out; }
+    .sbar-fill.pos { background:linear-gradient(90deg, var(--green), #34d399); }
+    .sbar-fill.neu { background:linear-gradient(90deg, var(--blue), #60a5fa); }
+    .sbar-fill.neg { background:linear-gradient(90deg, var(--red), #f87171); }
+    .sbar-pct { font-size:0.82rem; font-family:'JetBrains Mono',monospace; color:var(--t1); width:38px; text-align:right; }
+
+    /* Stats grid inside radar */
+    .radar-stats {
+      display:grid; grid-template-columns:1fr 1fr; gap:10px;
+      margin-top:24px; padding-top:20px; border-top:1px solid var(--border);
+    }
+    .rstat {
+      text-align:center; padding:14px;
+      background:rgba(0,0,0,0.25); border-radius:12px;
+      border:1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .rstat:hover { border-color:var(--border-h); }
+    .rstat-num {
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.5rem; font-weight:700;
+    }
+    .rstat-label {
+      font-size:0.68rem; color:var(--t3); margin-top:4px;
+      text-transform:uppercase; letter-spacing:0.08em;
+    }
+
+    /* Threat feed */
+    .threat-feed { display:flex; flex-direction:column; gap:12px; }
+    .threat-item {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:14px 16px; border-radius:12px;
+      background:rgba(0,0,0,0.25); border:1px solid var(--border);
+      transition: all 0.3s;
+    }
+    .threat-item:hover { border-color:var(--border-h); background:rgba(0,212,255,0.02); }
+    .tdot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+    .tdot.crit { background:var(--red); box-shadow:0 0 10px var(--red); }
+    .tdot.warn { background:var(--orange); box-shadow:0 0 10px var(--orange); }
+    .tdot.info { background:var(--cyan); box-shadow:0 0 10px var(--cyan); }
+    .threat-body { flex:1; }
+    .threat-title { font-size:0.85rem; font-weight:600; color:var(--t1); margin-bottom:3px; }
+    .threat-meta { font-size:0.72rem; color:var(--t3); }
+    .threat-time { font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--t3); flex-shrink:0; margin-top:4px; }
+
+    /* ── COMPARISON TABLE ── */
+    .tbl-wrap { margin-top:64px; border-radius:var(--r); overflow:hidden; border:1px solid var(--border); }
+    .tbl { width:100%; border-collapse:collapse; }
+    .tbl th, .tbl td { padding:18px 24px; text-align:left; border-bottom:1px solid var(--border); font-size:0.88rem; }
+    .tbl thead th {
+      background:rgba(0,0,0,0.4); font-weight:600; font-size:0.75rem;
+      text-transform:uppercase; letter-spacing:0.08em; color:var(--t3);
+    }
+    .tbl thead th:first-child { color:var(--t1); }
+    .tbl tbody tr { background:var(--bg2); transition:background 0.3s; }
+    .tbl tbody tr:hover { background:rgba(0,212,255,0.02); }
+    .tbl td:first-child { font-weight:600; color:var(--t1); }
+    .ck { color:var(--green); font-weight:700; font-size:1.1rem; }
+    .cx { color:var(--t3); font-size:1.1rem; }
+    .hl { background:rgba(0,212,255,0.03); }
+    .tbl thead .hl { color:var(--cyan); position:relative; }
+    .tbl thead .hl::after {
+      content:''; position:absolute; top:0; left:15%; right:15%; height:2px;
+      background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+
+    /* ── TRUST SECTION ── */
+    .trust-grid {
+      display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-top:64px;
+    }
+    .trust-item {
+      position:relative; border-radius:var(--r); overflow:hidden;
+      text-align:center; padding:36px 20px;
+      transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .trust-item::before {
+      content:''; position:absolute; inset:0; border-radius:var(--r); padding:1px;
+      background:linear-gradient(135deg, rgba(0,212,255,0.12), rgba(124,58,237,0.08), transparent);
+      -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude;
+      opacity:0; transition:opacity 0.4s;
+    }
+    .trust-item:hover::before { opacity:1; }
+    .trust-item:hover { transform:translateY(-4px); }
+    .trust-inner {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); padding:36px 20px; height:100%;
+      backdrop-filter:blur(10px);
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+    }
+    .trust-icon {
+      width:56px; height:56px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; position:relative;
+    }
+    .trust-icon::after {
+      content:''; position:absolute; inset:-3px; border-radius:50%;
+      opacity:0.15; filter:blur(8px);
+    }
+    .ti-cyan { background:rgba(0,212,255,0.08); color:var(--cyan); }
+    .ti-cyan::after { background:var(--cyan); }
+    .ti-green { background:rgba(16,185,129,0.08); color:var(--green); }
+    .ti-green::after { background:var(--green); }
+    .ti-purple { background:rgba(124,58,237,0.08); color:var(--purple); }
+    .ti-purple::after { background:var(--purple); }
+    .ti-pink { background:rgba(236,72,153,0.08); color:var(--pink); }
+    .ti-pink::after { background:var(--pink); }
+    .ti-blue { background:rgba(59,130,246,0.08); color:var(--blue); }
+    .ti-blue::after { background:var(--blue); }
+    .trust-name { font-size:0.85rem; font-weight:600; color:var(--t1); }
+    .trust-desc { font-size:0.75rem; color:var(--t3); line-height:1.5; }
+
+    /* ── CTA ── */
+    .cta { text-align:center; padding:140px 0; position:relative; }
     .cta-glow {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px; height: 400px; border-radius: 50%;
-      background: radial-gradient(ellipse, rgba(0,212,255,0.08), transparent 70%);
-      pointer-events: none;
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:700px; height:500px; border-radius:50%;
+      background:radial-gradient(ellipse, rgba(0,212,255,0.06), transparent 70%);
+      pointer-events:none;
     }
-    .cta-section h2 {
-      font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800;
-      letter-spacing: -0.03em; margin-bottom: 16px;
-      position: relative; z-index: 1;
+    .cta h2 {
+      font-size:clamp(2.4rem, 5vw, 3.6rem); font-weight:900;
+      letter-spacing:-0.035em; margin-bottom:18px; position:relative; z-index:1;
     }
-    .cta-section p {
-      font-size: 1.1rem; color: var(--text-secondary);
-      max-width: 500px; margin: 0 auto 36px; line-height: 1.7;
-      position: relative; z-index: 1;
-    }
-    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+    .cta p { font-size:1.1rem; color:var(--t2); max-width:480px; margin:0 auto 40px; line-height:1.75; position:relative; z-index:1; }
+    .cta-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
 
-    /* ═══════════════════════════════════════════
-       FOOTER
-       ═══════════════════════════════════════════ */
-    footer {
-      border-top: 1px solid var(--border-subtle);
-      padding: 48px 0; position: relative; z-index: 1;
-    }
-    .footer-inner {
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .footer-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.95rem; }
-    .footer-brand span { color: var(--accent-cyan); }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a { font-size: 0.85rem; color: var(--text-muted); transition: color 0.3s; }
-    .footer-links a:hover { color: var(--text-primary); }
-    .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+    /* ── FOOTER ── */
+    footer { border-top:1px solid var(--border); padding:52px 0; position:relative; z-index:1; }
+    .ft-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+    .ft-brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:0.95rem; }
+    .ft-brand em { font-style:normal; color:var(--cyan); }
+    .ft-links { display:flex; gap:28px; }
+    .ft-links a { font-size:0.85rem; color:var(--t3); transition:color 0.3s; }
+    .ft-links a:hover { color:var(--t1); }
+    .ft-copy { font-size:0.78rem; color:var(--t3); }
 
-    /* ═══════════════════════════════════════════
-       RESPONSIVE
-       ═══════════════════════════════════════════ */
-    @media (max-width: 900px) {
-      .bento-grid { grid-template-columns: 1fr; }
-      .bento-card.span-2 { grid-column: span 1; }
-      .timeline { grid-template-columns: repeat(2, 1fr); }
-      .timeline::before { display: none; }
-      .metrics-bar { grid-template-columns: repeat(2, 1fr); margin-top: -40px; }
-      .dashboard-body { grid-template-columns: 1fr; }
-      .hero-visual { display: none; }
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px) {
+      .bento { grid-template-columns:repeat(6,1fr); }
+      .b-8,.b-4 { grid-column:span 6; }
+      .trust-grid { grid-template-columns:repeat(3,1fr); }
     }
-    @media (max-width: 640px) {
-      section { padding: 80px 0; }
-      .metrics-bar { grid-template-columns: 1fr 1fr; }
-      .timeline { grid-template-columns: 1fr; gap: 40px; }
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
+    @media(max-width:768px) {
+      section { padding:100px 0; }
+      .bento { grid-template-columns:1fr; }
+      .b-8,.b-4,.b-6 { grid-column:span 1; }
+      .steps { grid-template-columns:repeat(2,1fr); }
+      .steps::before { display:none; }
+      .radar-body { grid-template-columns:1fr; }
+      .radar-panel:first-child { border-right:none; border-bottom:1px solid var(--border); }
+      .hero-vis { display:none; }
+      .trust-grid { grid-template-columns:repeat(2,1fr); }
+      .tbl-wrap { overflow-x:auto; }
+      .tbl { min-width:600px; }
+    }
+    @media(max-width:640px) {
+      .nav-links { display:none; }
+      .ham { display:flex; }
       .nav-links.open {
-        display: flex; flex-direction: column;
-        position: absolute; top: 100%; left: 0; right: 0;
-        background: rgba(6,6,11,0.97); backdrop-filter: blur(20px);
-        padding: 24px; gap: 20px; border-bottom: 1px solid var(--border-subtle);
+        display:flex; flex-direction:column;
+        position:absolute; top:100%; left:0; right:0;
+        background:rgba(5,5,8,0.97); backdrop-filter:blur(20px);
+        padding:28px; gap:22px; border-bottom:1px solid var(--border);
       }
-      .compare-table-wrap { overflow-x: auto; }
-      .compare-table { min-width: 600px; }
+      .trust-grid { grid-template-columns:1fr; }
+      .steps { grid-template-columns:1fr; gap:44px; }
+      .marquee-wrap { margin-top:-50px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Effects -->
-  <div class="bg-grid"></div>
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
-  <div class="bg-orb bg-orb-3"></div>
+  <!-- FX layers -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="noise"></div>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-  <!-- ═══ NAVIGATION ═══ -->
+  <!-- ═══ NAV ═══ -->
   <nav id="navbar">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        <div class="nav-logo-icon">R</div>
-        Reputat<span>AI</span>
+    <div class="nav-in">
+      <a href="#" class="logo">
+        <div class="logo-box">R</div>
+        Reputat<em>AI</em>
       </a>
       <div class="nav-links" id="navLinks">
         <a href="#features">Platform</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#dashboard">Live Radar</a>
+        <a href="#how">How It Works</a>
+        <a href="#radar">Live Radar</a>
         <a href="#compare">Compare</a>
         <a href="#contact" class="nav-cta">Request Demo</a>
       </div>
-      <button class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <button class="ham" onclick="document.getElementById('navLinks').classList.toggle('open')">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -633,306 +636,244 @@
 
   <!-- ═══ HERO ═══ -->
   <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-badge reveal">
-          <div class="hero-badge-dot"></div>
+    <div class="wrap">
+      <div class="hero-inner">
+        <div class="hero-tag rv">
+          <div class="pulse-dot"></div>
           Real-Time Monitoring Active
         </div>
-        <h1 class="reveal reveal-delay-1">
+        <h1 class="rv d1">
           Your Brand's<br>
-          <span class="gradient-text">Reputation Shield</span><br>
+          <span class="grad">Reputation Shield</span><br>
           Powered by AI
         </h1>
-        <p class="reveal reveal-delay-2">
-          Detect reputation threats in real time. Neutralize FUD cascades before they go viral.
+        <p class="rv d2">
+          Detect reputation threats in real time. Neutralize crises before they go viral.
           Defend your brand with autonomous AI response engines and crisis containment protocols.
         </p>
-        <div class="hero-buttons reveal reveal-delay-3">
-          <a href="#contact" class="btn-primary">
-            <span>&#9889; Request Confidential Demo</span>
-          </a>
-          <a href="#dashboard" class="btn-secondary">
-            &#9678; See Live Radar
-          </a>
+        <div class="hero-btns rv d3">
+          <a href="#contact" class="btn-glow"><span>&#9889; Request Confidential Demo</span></a>
+          <a href="#radar" class="btn-glass">&#9678; See Live Radar</a>
         </div>
       </div>
     </div>
-    <!-- Animated rings -->
-    <div class="hero-visual" aria-hidden="true">
-      <div class="hero-ring hero-ring-1"><div class="hero-ring-dot"></div></div>
-      <div class="hero-ring hero-ring-2"><div class="hero-ring-dot"></div></div>
-      <div class="hero-ring hero-ring-3"><div class="hero-ring-dot"></div></div>
+    <div class="hero-vis" aria-hidden="true">
+      <div class="ring ring-1"><div class="rdot"></div></div>
+      <div class="ring ring-2"><div class="rdot"></div></div>
+      <div class="ring ring-3"><div class="rdot"></div></div>
+      <div class="ring-center">&#128737;</div>
     </div>
   </section>
 
-  <!-- ═══ METRICS BAR ═══ -->
-  <div class="container">
-    <div class="metrics-bar reveal">
-      <div class="metric-item">
-        <div class="metric-number cyan" data-target="24" data-suffix="/7">0/7</div>
-        <div class="metric-label">Threat Monitoring</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-number green" data-target="97" data-suffix="%">0%</div>
-        <div class="metric-label">Detection Accuracy</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-number purple" data-target="5" data-prefix="<" data-suffix=" min">0 min</div>
-        <div class="metric-label">Response SLA</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-number blue" data-target="40" data-suffix="%+">0%+</div>
-        <div class="metric-label">Churn Reduction</div>
-      </div>
+  <!-- ═══ METRICS MARQUEE ═══ -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <div class="mq-item"><span class="mq-num" style="color:var(--cyan)">24/7</span> Threat Monitoring</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--green)">97%</span> Detection Accuracy</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--purple)">&lt;5min</span> Response SLA</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--pink)">40%+</span> Churn Reduction</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--blue)">12+</span> Platform Coverage</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--orange)">3.2s</span> Avg Response Time</div>
+      <div class="mq-sep"></div>
+      <!-- Duplicate for seamless loop -->
+      <div class="mq-item"><span class="mq-num" style="color:var(--cyan)">24/7</span> Threat Monitoring</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--green)">97%</span> Detection Accuracy</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--purple)">&lt;5min</span> Response SLA</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--pink)">40%+</span> Churn Reduction</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--blue)">12+</span> Platform Coverage</div>
+      <div class="mq-sep"></div>
+      <div class="mq-item"><span class="mq-num" style="color:var(--orange)">3.2s</span> Avg Response Time</div>
     </div>
   </div>
 
-  <!-- ═══ FEATURES – BENTO GRID ═══ -->
+  <!-- ═══ FEATURES ═══ -->
   <section id="features">
-    <div class="container">
-      <div class="section-header-center">
-        <div class="section-label reveal">Core Modules</div>
-        <h2 class="section-title reveal reveal-delay-1">Six Engines. One Intelligent Platform.</h2>
-        <p class="section-subtitle reveal reveal-delay-2">
-          Every module works autonomously and in concert — ingesting, analyzing, and neutralizing
-          reputation threats across every public surface your brand touches.
-        </p>
+    <div class="wrap">
+      <div class="centered">
+        <div class="stag rv">Core Modules</div>
+        <h2 class="stitle rv d1">Six Engines. One Intelligent Platform.</h2>
+        <p class="ssub rv d2">Every module works autonomously and in concert — ingesting, analyzing, and neutralizing reputation threats across every surface your brand touches.</p>
       </div>
-
-      <div class="bento-grid">
-        <!-- Card 1: Review Explorer -->
-        <div class="bento-card span-2 reveal">
-          <div class="bento-card-glow"></div>
-          <div class="bento-icon cyan">&#128269;</div>
-          <h3>Review Explorer &amp; Ingestion Engine</h3>
-          <p>
-            Continuously monitors Trustpilot, Google Reviews, Reddit threads, Hacker News,
-            app stores, and 12+ social signals. Aggregates every mention into a unified
-            threat timeline with source attribution, velocity tracking, and anomaly spikes.
-          </p>
-          <div class="mini-chart">
-            <div class="mini-bar" style="height: 30%"></div>
-            <div class="mini-bar" style="height: 45%"></div>
-            <div class="mini-bar" style="height: 25%"></div>
-            <div class="mini-bar" style="height: 60%"></div>
-            <div class="mini-bar" style="height: 55%"></div>
-            <div class="mini-bar" style="height: 80%"></div>
-            <div class="mini-bar" style="height: 70%"></div>
-            <div class="mini-bar" style="height: 90%"></div>
-            <div class="mini-bar" style="height: 65%"></div>
-            <div class="mini-bar" style="height: 95%"></div>
-            <div class="mini-bar" style="height: 50%"></div>
-            <div class="mini-bar" style="height: 75%"></div>
-            <div class="mini-bar" style="height: 85%"></div>
-            <div class="mini-bar" style="height: 60%"></div>
+      <div class="bento">
+        <!-- 1: Review Explorer -->
+        <div class="b-8 gcard rv d1">
+          <div class="gcard-glow"></div>
+          <div class="gcard-inner">
+            <div class="feat-icon fi-cyan">&#128269;</div>
+            <h3>Review Explorer &amp; Ingestion Engine</h3>
+            <p>Continuously monitors Trustpilot, Google Reviews, Reddit, Hacker News, app stores, and 12+ social signals. Aggregates every mention into a unified threat timeline with source attribution and anomaly spikes.</p>
+            <div class="spark">
+              <div class="spark-bar" style="height:25%"></div>
+              <div class="spark-bar" style="height:40%"></div>
+              <div class="spark-bar" style="height:20%"></div>
+              <div class="spark-bar" style="height:55%"></div>
+              <div class="spark-bar" style="height:50%"></div>
+              <div class="spark-bar" style="height:75%"></div>
+              <div class="spark-bar" style="height:65%"></div>
+              <div class="spark-bar" style="height:85%"></div>
+              <div class="spark-bar" style="height:60%"></div>
+              <div class="spark-bar" style="height:95%"></div>
+              <div class="spark-bar" style="height:45%"></div>
+              <div class="spark-bar" style="height:70%"></div>
+              <div class="spark-bar" style="height:80%"></div>
+              <div class="spark-bar" style="height:55%"></div>
+            </div>
           </div>
         </div>
-
-        <!-- Card 2: AI Response Studio -->
-        <div class="bento-card reveal reveal-delay-1">
-          <div class="bento-card-glow"></div>
-          <div class="bento-icon purple">&#9889;</div>
-          <h3>AI Response Studio</h3>
-          <p>
-            Multi-LLM response generation with tone calibration, brand-voice locking, and
-            regulatory compliance checks. Drafts empathetic, de-escalatory replies in under
-            4 seconds per review.
-          </p>
-        </div>
-
-        <!-- Card 3: Crisis Chat Simulator -->
-        <div class="bento-card reveal reveal-delay-2">
-          <div class="bento-card-glow"></div>
-          <div class="bento-icon pink">&#128680;</div>
-          <h3>Crisis Chat Simulator</h3>
-          <p>
-            Real-time crisis war room with interactive chat interface. Simulate viral FUD
-            events, test your team's containment protocols, and benchmark response
-            effectiveness under pressure.
-          </p>
-        </div>
-
-        <!-- Card 4: Sentiment Intelligence -->
-        <div class="bento-card reveal reveal-delay-3">
-          <div class="bento-card-glow"></div>
-          <div class="bento-icon green">&#128200;</div>
-          <h3>Sentiment Intelligence</h3>
-          <p>
-            Deep NLP-powered sentiment classification beyond simple positive/negative.
-            Detects sarcasm, frustration intensity, churn intent signals, and coordinated
-            attack patterns.
-          </p>
-        </div>
-
-        <!-- Card 5: Competitor Benchmarking -->
-        <div class="bento-card span-2 reveal reveal-delay-4">
-          <div class="bento-card-glow"></div>
-          <div class="bento-icon orange">&#127942;</div>
-          <h3>Competitor Benchmark Matrix</h3>
-          <p>
-            Side-by-side reputation scoring against up to 6 competitors. Track response velocity gaps,
-            sentiment drift differentials, and crisis recovery times.
-            Know exactly where you stand — and where your competitors are gaining ground.
-          </p>
-          <div class="terminal-mock">
-            <div><span class="prompt">reputat</span> <span class="cmd">benchmark --target your-brand --competitors comp-a,comp-b,comp-c</span></div>
-            <div><span class="output">✓ Ingested 4,218 reviews across 4 platforms</span></div>
-            <div><span class="output">✓ Sentiment delta: Your brand trails Competitor A by 12.4pts on response velocity</span></div>
-            <div><span class="warn">⚠ Alert: Support friction complaints 3.2x above industry median</span></div>
+        <!-- 2: AI Response Studio -->
+        <div class="b-4 gcard rv d2">
+          <div class="gcard-glow"></div>
+          <div class="gcard-inner">
+            <div class="feat-icon fi-purple">&#9889;</div>
+            <h3>AI Response Studio</h3>
+            <p>Multi-LLM response generation with tone calibration, brand-voice locking, and compliance checks. Drafts empathetic, de-escalatory replies in under 4 seconds.</p>
           </div>
         </div>
-
-        <!-- Card 6: Executive Risk Reports -->
-        <div class="bento-card reveal reveal-delay-5">
-          <div class="bento-card-glow"></div>
-          <div class="bento-icon blue">&#128196;</div>
-          <h3>Executive Risk Reports</h3>
-          <p>
-            Auto-generated board-ready PDF dossiers with threat heatmaps, ROI projections,
-            and actionable remediation playbooks.
-            Delivered weekly or on-demand.
-          </p>
+        <!-- 3: Crisis Simulator -->
+        <div class="b-4 gcard rv d3">
+          <div class="gcard-glow"></div>
+          <div class="gcard-inner">
+            <div class="feat-icon fi-pink">&#128680;</div>
+            <h3>Crisis Chat Simulator</h3>
+            <p>Interactive crisis war room. Simulate viral events, test containment protocols, and benchmark response effectiveness under pressure.</p>
+          </div>
+        </div>
+        <!-- 4: Sentiment Intelligence -->
+        <div class="b-4 gcard rv d3">
+          <div class="gcard-glow"></div>
+          <div class="gcard-inner">
+            <div class="feat-icon fi-green">&#128200;</div>
+            <h3>Sentiment Intelligence</h3>
+            <p>Deep NLP beyond simple positive/negative. Detects sarcasm, frustration intensity, churn intent, and coordinated attack patterns.</p>
+          </div>
+        </div>
+        <!-- 5: Competitor Benchmarking -->
+        <div class="b-8 gcard rv d4">
+          <div class="gcard-glow"></div>
+          <div class="gcard-inner" style="display:flex; flex-direction:column;">
+            <div style="display:flex; gap:20px; align-items:flex-start;">
+              <div class="feat-icon fi-orange">&#127942;</div>
+              <div style="flex:1;">
+                <h3>Competitor Benchmark Matrix</h3>
+                <p>Side-by-side reputation scoring against up to 6 competitors. Track response velocity gaps, sentiment drift, and crisis recovery times.</p>
+              </div>
+            </div>
+            <div class="term">
+              <div><span class="pr">reputat</span> <span class="cm">benchmark --target your-brand --competitors comp-a,comp-b,comp-c</span></div>
+              <div><span class="ok">✓ Ingested 4,218 reviews across 4 platforms</span></div>
+              <div><span class="ok">✓ Sentiment delta: Your brand trails Competitor A by 12.4pts on response velocity</span></div>
+              <div><span class="wr">⚠ Alert: Support friction complaints 3.2x above industry median</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- 6: Executive Reports -->
+        <div class="b-4 gcard rv d5">
+          <div class="gcard-glow"></div>
+          <div class="gcard-inner">
+            <div class="feat-icon fi-blue">&#128196;</div>
+            <h3>Executive Risk Reports</h3>
+            <p>Auto-generated board-ready PDF dossiers with threat heatmaps, ROI projections, and actionable remediation playbooks.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ HOW IT WORKS ═══ -->
-  <section id="how-it-works" style="background: var(--bg-secondary);">
-    <div class="container">
-      <div class="section-header-center">
-        <div class="section-label reveal">How It Works</div>
-        <h2 class="section-title reveal reveal-delay-1">Threat Detected &#8594; Neutralized. Automatically.</h2>
-        <p class="section-subtitle reveal reveal-delay-2">
-          From raw signal to executive action in four autonomous stages.
-        </p>
+  <section id="how" style="background:var(--bg2);">
+    <div class="wrap">
+      <div class="centered">
+        <div class="stag rv">How It Works</div>
+        <h2 class="stitle rv d1">Threat Detected &#8594; Neutralized. <span class="grad">Automatically.</span></h2>
+        <p class="ssub rv d2">From raw signal to executive action in four autonomous stages.</p>
       </div>
-      <div class="timeline">
-        <div class="timeline-step reveal">
-          <div class="timeline-dot">&#128225;</div>
-          <h4>Ingest</h4>
-          <p>Continuous crawlers scan Trustpilot, Reddit, app stores, and social channels every 60 seconds.</p>
-        </div>
-        <div class="timeline-step reveal reveal-delay-1">
-          <div class="timeline-dot">&#129504;</div>
-          <h4>Analyze</h4>
-          <p>Multi-model NLP pipeline classifies sentiment, detects coordination patterns, and scores threat severity.</p>
-        </div>
-        <div class="timeline-step reveal reveal-delay-2">
-          <div class="timeline-dot">&#9889;</div>
-          <h4>Respond</h4>
-          <p>AI Response Studio generates brand-aligned, compliance-checked replies and routes critical alerts to your team.</p>
-        </div>
-        <div class="timeline-step reveal reveal-delay-3">
-          <div class="timeline-dot">&#128737;</div>
-          <h4>Defend</h4>
-          <p>Automated playbooks contain FUD cascades, while executive dashboards track resolution in real time.</p>
-        </div>
+      <div class="steps">
+        <div class="step rv"><div class="step-icon">&#128225;</div><h4>Ingest</h4><p>Continuous crawlers scan Trustpilot, Reddit, app stores, and social channels every 60 seconds.</p></div>
+        <div class="step rv d1"><div class="step-icon">&#129504;</div><h4>Analyze</h4><p>Multi-model NLP pipeline classifies sentiment, detects coordination, and scores threat severity.</p></div>
+        <div class="step rv d2"><div class="step-icon">&#9889;</div><h4>Respond</h4><p>AI Response Studio generates brand-aligned, compliance-checked replies and routes critical alerts.</p></div>
+        <div class="step rv d3"><div class="step-icon">&#128737;</div><h4>Defend</h4><p>Automated playbooks contain cascades while executive dashboards track resolution in real time.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ LIVE DASHBOARD PREVIEW ═══ -->
-  <section id="dashboard">
-    <div class="container">
-      <div class="section-header-center">
-        <div class="section-label reveal">Live Radar Preview</div>
-        <h2 class="section-title reveal reveal-delay-1">Your Reputation Command Center</h2>
-        <p class="section-subtitle reveal reveal-delay-2">
-          A real-time threat radar that never sleeps. Every mention, every platform, every second.
-        </p>
+  <!-- ═══ LIVE RADAR ═══ -->
+  <section id="radar">
+    <div class="wrap">
+      <div class="centered">
+        <div class="stag rv">Live Radar Preview</div>
+        <h2 class="stitle rv d1">Your Reputation <span class="grad">Command Center</span></h2>
+        <p class="ssub rv d2">A real-time threat radar that never sleeps. Every mention, every platform, every second.</p>
       </div>
-      <div class="dashboard-preview reveal reveal-delay-3">
-        <div class="dashboard-topbar">
-          <div class="dot-r"></div>
-          <div class="dot-y"></div>
-          <div class="dot-g"></div>
-          <div class="dashboard-url">reputatai.in/command-center — live threat monitor</div>
-        </div>
-        <div class="dashboard-body" style="grid-template-columns: 1fr 1.2fr;">
-          <!-- Left: Sentiment + Stats -->
-          <div class="dash-panel">
-            <h5>&#128200; Sentiment Breakdown — Last 7 Days</h5>
-            <div class="sentiment-bar-group">
-              <div class="sentiment-row">
-                <div class="sentiment-label">Positive</div>
-                <div class="sentiment-track"><div class="sentiment-fill positive" style="width: 42%"></div></div>
-                <div class="sentiment-pct">42%</div>
-              </div>
-              <div class="sentiment-row">
-                <div class="sentiment-label">Neutral</div>
-                <div class="sentiment-track"><div class="sentiment-fill neutral" style="width: 26%"></div></div>
-                <div class="sentiment-pct">26%</div>
-              </div>
-              <div class="sentiment-row">
-                <div class="sentiment-label">Negative</div>
-                <div class="sentiment-track"><div class="sentiment-fill negative" style="width: 32%"></div></div>
-                <div class="sentiment-pct">32%</div>
-              </div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border-subtle);">
-              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
-                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-cyan);">2,847</div>
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Mentions Tracked</div>
-              </div>
-              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
-                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-green);">14</div>
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Threats Neutralized</div>
-              </div>
-              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
-                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-orange);">3.2s</div>
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Avg Response Time</div>
-              </div>
-              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
-                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-purple);">12</div>
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Platforms Monitored</div>
-              </div>
-            </div>
+      <div class="radar-card rv d3">
+        <div class="radar-inner">
+          <div class="radar-topbar">
+            <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+            <div class="radar-url">reputatai.in/command-center — live threat monitor</div>
           </div>
-          <!-- Right: Live Threat Feed -->
-          <div class="dash-panel">
-            <h5>&#128680; Live Threat Feed — All Channels</h5>
-            <div class="alert-feed">
-              <div class="alert-item">
-                <div class="alert-dot crit"></div>
-                <div style="flex:1;">
-                  <div style="color:var(--text-primary); font-weight:500;">Negative review surge detected on Trustpilot</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Trustpilot &nbsp;·&nbsp; Severity: Critical &nbsp;·&nbsp; AI Response: Drafted</div>
+          <div class="radar-body">
+            <div class="radar-panel">
+              <h5>&#128200; Sentiment Breakdown — Last 7 Days</h5>
+              <div class="sbar-group">
+                <div class="sbar-row">
+                  <div class="sbar-label">Positive</div>
+                  <div class="sbar-track"><div class="sbar-fill pos" style="width:42%"></div></div>
+                  <div class="sbar-pct">42%</div>
                 </div>
-                <div class="alert-time">2m ago</div>
+                <div class="sbar-row">
+                  <div class="sbar-label">Neutral</div>
+                  <div class="sbar-track"><div class="sbar-fill neu" style="width:26%"></div></div>
+                  <div class="sbar-pct">26%</div>
+                </div>
+                <div class="sbar-row">
+                  <div class="sbar-label">Negative</div>
+                  <div class="sbar-track"><div class="sbar-fill neg" style="width:32%"></div></div>
+                  <div class="sbar-pct">32%</div>
+                </div>
               </div>
-              <div class="alert-item">
-                <div class="alert-dot warn"></div>
-                <div style="flex:1;">
-                  <div style="color:var(--text-primary); font-weight:500;">Support complaint thread gaining traction — 47 upvotes</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Reddit &nbsp;·&nbsp; Severity: High &nbsp;·&nbsp; Escalation: Pending</div>
-                </div>
-                <div class="alert-time">8m ago</div>
+              <div class="radar-stats">
+                <div class="rstat"><div class="rstat-num" style="color:var(--cyan)">2,847</div><div class="rstat-label">Mentions Tracked</div></div>
+                <div class="rstat"><div class="rstat-num" style="color:var(--green)">14</div><div class="rstat-label">Threats Neutralized</div></div>
+                <div class="rstat"><div class="rstat-num" style="color:var(--orange)">3.2s</div><div class="rstat-label">Avg Response</div></div>
+                <div class="rstat"><div class="rstat-num" style="color:var(--purple)">12</div><div class="rstat-label">Platforms</div></div>
               </div>
-              <div class="alert-item">
-                <div class="alert-dot info"></div>
-                <div style="flex:1;">
-                  <div style="color:var(--text-primary); font-weight:500;">Positive customer experience shared on Google Reviews</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Google &nbsp;·&nbsp; Sentiment: +0.87 &nbsp;·&nbsp; Status: Amplified</div>
+            </div>
+            <div class="radar-panel">
+              <h5>&#128680; Live Threat Feed — All Channels</h5>
+              <div class="threat-feed">
+                <div class="threat-item">
+                  <div class="tdot crit"></div>
+                  <div class="threat-body"><div class="threat-title">Negative review surge detected on Trustpilot</div><div class="threat-meta">Source: Trustpilot · Severity: Critical · AI Response: Drafted</div></div>
+                  <div class="threat-time">2m ago</div>
                 </div>
-                <div class="alert-time">14m ago</div>
-              </div>
-              <div class="alert-item">
-                <div class="alert-dot crit"></div>
-                <div style="flex:1;">
-                  <div style="color:var(--text-primary); font-weight:500;">Coordinated negative review pattern detected across 3 platforms</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Multi-Platform &nbsp;·&nbsp; Severity: Critical &nbsp;·&nbsp; Playbook: Activated</div>
+                <div class="threat-item">
+                  <div class="tdot warn"></div>
+                  <div class="threat-body"><div class="threat-title">Support complaint thread gaining traction — 47 upvotes</div><div class="threat-meta">Source: Reddit · Severity: High · Escalation: Pending</div></div>
+                  <div class="threat-time">8m ago</div>
                 </div>
-                <div class="alert-time">22m ago</div>
-              </div>
-              <div class="alert-item">
-                <div class="alert-dot warn"></div>
-                <div style="flex:1;">
-                  <div style="color:var(--text-primary); font-weight:500;">Brand mention in negative news article — spreading on X</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: X (Twitter) &nbsp;·&nbsp; Velocity: 12 shares/hr &nbsp;·&nbsp; Containment: Active</div>
+                <div class="threat-item">
+                  <div class="tdot info"></div>
+                  <div class="threat-body"><div class="threat-title">Positive customer experience shared on Google Reviews</div><div class="threat-meta">Source: Google · Sentiment: +0.87 · Status: Amplified</div></div>
+                  <div class="threat-time">14m ago</div>
                 </div>
-                <div class="alert-time">31m ago</div>
+                <div class="threat-item">
+                  <div class="tdot crit"></div>
+                  <div class="threat-body"><div class="threat-title">Coordinated negative pattern detected across 3 platforms</div><div class="threat-meta">Source: Multi-Platform · Severity: Critical · Playbook: Activated</div></div>
+                  <div class="threat-time">22m ago</div>
+                </div>
+                <div class="threat-item">
+                  <div class="tdot warn"></div>
+                  <div class="threat-body"><div class="threat-title">Brand mention in negative article — spreading on X</div><div class="threat-meta">Source: X (Twitter) · Velocity: 12 shares/hr · Containment: Active</div></div>
+                  <div class="threat-time">31m ago</div>
+                </div>
               </div>
             </div>
           </div>
@@ -941,213 +882,138 @@
     </div>
   </section>
 
-  <!-- ═══ COMPARISON TABLE ═══ -->
-  <section id="compare" style="background: var(--bg-secondary);">
-    <div class="container">
-      <div class="section-header-center">
-        <div class="section-label reveal">Why ReputatAI</div>
-        <h2 class="section-title reveal reveal-delay-1">Built Different. Engineered to Defend.</h2>
-        <p class="section-subtitle reveal reveal-delay-2">
-          Traditional monitoring tools alert you after the damage is done. ReputatAI prevents it.
-        </p>
+  <!-- ═══ COMPARISON ═══ -->
+  <section id="compare" style="background:var(--bg2);">
+    <div class="wrap">
+      <div class="centered">
+        <div class="stag rv">Why ReputatAI</div>
+        <h2 class="stitle rv d1">Built Different. <span class="grad">Engineered to Defend.</span></h2>
+        <p class="ssub rv d2">Traditional monitoring tools alert you after the damage is done. ReputatAI prevents it.</p>
       </div>
-      <div class="compare-table-wrap reveal reveal-delay-3">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>Capability</th>
-              <th class="highlight-col">ReputatAI</th>
-              <th>Brand24</th>
-              <th>Mention</th>
-              <th>Manual Team</th>
-            </tr>
-          </thead>
+      <div class="tbl-wrap rv d3">
+        <table class="tbl">
+          <thead><tr><th>Capability</th><th class="hl">ReputatAI</th><th>Brand24</th><th>Mention</th><th>Manual Team</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Real-Time Threat Detection</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="check">&#10003;</span></td>
-              <td><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>AI-Generated Response Drafts</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>Crisis Chat Simulation</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>Competitor Benchmarking</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>Web3 / Gaming Vertical Intelligence</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>Auto Executive PDF Reports</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>Sub-5-Minute Response SLA</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
-            <tr>
-              <td>FUD Cascade Prevention</td>
-              <td class="highlight-col"><span class="check">&#10003;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-              <td><span class="cross">&#10007;</span></td>
-            </tr>
+            <tr><td>Real-Time Threat Detection</td><td class="hl"><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>AI-Generated Response Drafts</td><td class="hl"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>Crisis Chat Simulation</td><td class="hl"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>Competitor Benchmarking</td><td class="hl"><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>Industry-Specific Intelligence</td><td class="hl"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>Auto Executive PDF Reports</td><td class="hl"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>Sub-5-Minute Response SLA</td><td class="hl"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+            <tr><td>FUD Cascade Prevention</td><td class="hl"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- ═══ TRUST & INFRASTRUCTURE ═══ -->
-  <section>
-    <div class="container">
-      <div class="section-header-center">
-        <div class="section-label reveal">Trust & Security</div>
-        <h2 class="section-title reveal reveal-delay-1">Enterprise-Grade. Battle-Tested.</h2>
-        <p class="section-subtitle reveal reveal-delay-2">
-          Built for organizations that can't afford downtime, data leaks, or slow responses.
-          Our infrastructure is designed to scale with your reputation surface.
-        </p>
+  <!-- ═══ TRUST ═══ -->
+  <section id="trust">
+    <div class="wrap">
+      <div class="centered">
+        <div class="stag rv">Trust & Security</div>
+        <h2 class="stitle rv d1">Enterprise-Grade. <span class="grad">Battle-Tested.</span></h2>
+        <p class="ssub rv d2">Built for organizations that can't afford downtime, data leaks, or slow responses.</p>
       </div>
-      <div class="tech-grid reveal reveal-delay-3">
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>256-bit AES Encryption</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>99.99% Uptime SLA</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Multi-LLM Orchestration</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-pink)"></div>SOC 2 Ready</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>Global Edge Network</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-blue)"></div>GDPR Compliant</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>Real-Time WebSocket Feeds</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>Role-Based Access Control</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Auto-Scaling Infrastructure</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>Dedicated Tenant Isolation</div>
+      <div class="trust-grid">
+        <div class="trust-item rv d1">
+          <div class="trust-inner">
+            <div class="trust-icon ti-cyan">&#128274;</div>
+            <div class="trust-name">256-bit AES Encryption</div>
+            <div class="trust-desc">End-to-end encryption for all data in transit and at rest</div>
+          </div>
+        </div>
+        <div class="trust-item rv d2">
+          <div class="trust-inner">
+            <div class="trust-icon ti-green">&#9889;</div>
+            <div class="trust-name">99.99% Uptime SLA</div>
+            <div class="trust-desc">Multi-region redundancy with automatic failover</div>
+          </div>
+        </div>
+        <div class="trust-item rv d3">
+          <div class="trust-inner">
+            <div class="trust-icon ti-purple">&#128737;</div>
+            <div class="trust-name">SOC 2 Ready</div>
+            <div class="trust-desc">Enterprise compliance framework with full audit trails</div>
+          </div>
+        </div>
+        <div class="trust-item rv d4">
+          <div class="trust-inner">
+            <div class="trust-icon ti-pink">&#127760;</div>
+            <div class="trust-name">GDPR Compliant</div>
+            <div class="trust-desc">Full data sovereignty and right-to-erasure support</div>
+          </div>
+        </div>
+        <div class="trust-item rv d5">
+          <div class="trust-inner">
+            <div class="trust-icon ti-blue">&#128640;</div>
+            <div class="trust-name">Global Edge Network</div>
+            <div class="trust-desc">300+ edge nodes for sub-50ms response anywhere</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ CTA ═══ -->
-  <section class="cta-section" id="contact">
-    <div class="container">
+  <section class="cta" id="contact">
+    <div class="wrap">
       <div class="cta-glow"></div>
-      <div class="section-label reveal" style="justify-content: center;">Get Started</div>
-      <h2 class="reveal reveal-delay-1">Ready to Defend Your<br><span class="gradient-text">Brand Reputation?</span></h2>
-      <p class="reveal reveal-delay-2">
-        Start with a confidential, zero-risk 14-day pilot.
-        No contracts. No setup fees. Real results within 48 hours.
-      </p>
-      <div class="cta-buttons reveal reveal-delay-3">
-        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Demo%20Request" class="btn-primary">
-          <span>&#128231; Request Private Demo</span>
-        </a>
-        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Confidential%20Audit" class="btn-secondary">
-          &#128196; Get Your Free Audit
-        </a>
+      <div class="stag rv" style="justify-content:center;">Get Started</div>
+      <h2 class="rv d1">Ready to Defend Your<br><span class="grad">Brand Reputation?</span></h2>
+      <p class="rv d2">Start with a confidential, zero-risk 14-day pilot.<br>No contracts. No setup fees. Real results within 48 hours.</p>
+      <div class="cta-btns rv d3">
+        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Demo%20Request" class="btn-glow"><span>&#128231; Request Private Demo</span></a>
+        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Free%20Audit" class="btn-glass">&#128196; Get Your Free Audit</a>
       </div>
     </div>
   </section>
 
   <!-- ═══ FOOTER ═══ -->
   <footer>
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <div class="nav-logo-icon" style="width:28px;height:28px;border-radius:8px;font-size:0.8rem;">R</div>
-          Reputat<span>AI</span>
+    <div class="wrap">
+      <div class="ft-inner">
+        <div class="ft-brand">
+          <div class="logo-box" style="width:28px;height:28px;border-radius:8px;font-size:0.75rem;">R</div>
+          Reputat<em>AI</em>
         </div>
-        <div class="footer-links">
+        <div class="ft-links">
           <a href="#features">Platform</a>
-          <a href="#how-it-works">How It Works</a>
+          <a href="#how">How It Works</a>
           <a href="#compare">Compare</a>
           <a href="mailto:info@reputatai.in">Contact</a>
         </div>
-        <div class="footer-copy">&copy; 2026 ReputatAI. All rights reserved.</div>
+        <div class="ft-copy">&copy; 2026 ReputatAI. All rights reserved.</div>
       </div>
     </div>
   </footer>
 
-  <!-- ═══ SCRIPTS ═══ -->
   <script>
-    // ─── Scroll Reveal ───
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    // Cursor glow
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    // Scroll reveal
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold:0.08, rootMargin:'0px 0px -30px 0px' });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 
-    // ─── Navbar scroll effect ───
+    // Nav scroll
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
     });
 
-    // ─── Animated metric counters ───
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const target = parseInt(el.dataset.target);
-          const prefix = el.dataset.prefix || '';
-          const suffix = el.dataset.suffix || '';
-          let current = 0;
-          const duration = 2000;
-          const step = target / (duration / 16);
-
-          const tick = () => {
-            current += step;
-            if (current >= target) {
-              el.textContent = prefix + target + suffix;
-            } else {
-              el.textContent = prefix + Math.floor(current) + suffix;
-              requestAnimationFrame(tick);
-            }
-          };
-          requestAnimationFrame(tick);
-          counterObserver.unobserve(el);
-        }
-      });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('.metric-number').forEach(el => counterObserver.observe(el));
-
-    // ─── Smooth scroll for anchor links ───
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          // Close mobile menu
-          document.getElementById('navLinks').classList.remove('open');
-        }
+        const t = document.querySelector(a.getAttribute('href'));
+        if(t) { t.scrollIntoView({behavior:'smooth',block:'start'}); document.getElementById('navLinks').classList.remove('open'); }
       });
     });
   </script>
