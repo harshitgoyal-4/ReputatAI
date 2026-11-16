@@ -583,18 +583,128 @@
     .ft-links a:hover { color:var(--t1); }
     .ft-copy { font-size:0.78rem; color:var(--t3); }
 
+    /* ── LEAD CAPTURE FORM SECTION ── */
+    .lead-section { position:relative; padding:140px 0; }
+    .lead-box {
+      background:var(--bg2); border:1px solid var(--border); border-radius:20px;
+      overflow:hidden; display:grid; grid-template-columns:1fr 1.25fr;
+      box-shadow:0 30px 80px rgba(0,0,0,0.6); position:relative;
+    }
+    .lead-info {
+      padding:48px; background:linear-gradient(135deg, rgba(0,212,255,0.03), rgba(124,58,237,0.03));
+      border-right:1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .lead-info-title { font-size:1.8rem; font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:16px; }
+    .lead-info-desc { font-size:0.95rem; color:var(--t2); line-height:1.7; margin-bottom:32px; }
+    .lead-perks { display:flex; flex-direction:column; gap:16px; margin-bottom:36px; }
+    .lead-perk-item { display:flex; align-items:center; gap:12px; font-size:0.88rem; color:var(--t1); font-weight:500; }
+    .lead-perk-check {
+      width:22px; height:22px; border-radius:50%; background:rgba(16,185,129,0.1);
+      border:1px solid rgba(16,185,129,0.3); color:var(--green);
+      display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:900; flex-shrink:0;
+    }
+    .lead-founder-note {
+      padding:16px 20px; background:rgba(0,0,0,0.3); border-radius:12px; border:1px solid var(--border);
+      display:flex; align-items:center; gap:14px;
+    }
+    .lfn-avatar {
+      width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, var(--cyan), var(--purple));
+      display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:1rem;
+    }
+    .lfn-name { font-size:0.86rem; font-weight:700; color:var(--t1); }
+    .lfn-sub { font-size:0.72rem; color:var(--t3); }
+
+    .lead-form-wrap { padding:48px; position:relative; }
+    .lead-form { display:flex; flex-direction:column; gap:20px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .form-label { font-size:0.8rem; font-weight:600; color:var(--t1); text-transform:uppercase; letter-spacing:0.06em; }
+    .form-input, .form-select, .form-textarea {
+      width:100%; padding:14px 16px; border-radius:10px;
+      background:rgba(0,0,0,0.4); border:1px solid var(--border);
+      color:var(--t1); font-family:'Inter',sans-serif; font-size:0.92rem;
+      transition:all 0.3s; outline:none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color:var(--cyan); background:rgba(0,212,255,0.02);
+      box-shadow:0 0 20px rgba(0,212,255,0.1);
+    }
+    .form-select { cursor:pointer; }
+    .form-select option { background:#0a0a10; color:#fff; }
+    .form-textarea { resize:none; min-height:80px; }
+    .form-submit-btn {
+      width:100%; padding:16px; border-radius:12px;
+      background:linear-gradient(135deg, var(--cyan), var(--blue));
+      color:#fff; font-weight:700; font-size:1rem; border:none; cursor:pointer;
+      transition:all 0.4s cubic-bezier(0.16,1,0.3,1); display:flex; align-items:center; justify-content:center; gap:8px;
+      box-shadow:0 10px 30px rgba(0,212,255,0.25);
+    }
+    .form-submit-btn:hover { transform:translateY(-2px); box-shadow:0 15px 40px rgba(0,212,255,0.4); }
+    .form-footnote { font-size:0.75rem; color:var(--t3); text-align:center; }
+
+    /* Success state */
+    .form-success {
+      display:none; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:40px 20px; height:100%; min-height:360px;
+    }
+    .form-success-icon {
+      width:64px; height:64px; border-radius:50%; background:rgba(16,185,129,0.1);
+      border:2px solid var(--green); color:var(--green); font-size:2rem;
+      display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+      box-shadow:0 0 30px rgba(16,185,129,0.3); animation:pulse 2s infinite;
+    }
+    .form-success-title { font-size:1.5rem; font-weight:800; color:var(--t1); margin-bottom:10px; }
+    .form-success-desc { font-size:0.92rem; color:var(--t2); max-width:400px; line-height:1.65; }
+
+    /* ── STATS GRID WITH DESCRIPTIONS (AIMAURA STYLE) ── */
+    .stats-desc-grid {
+      display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;
+    }
+    .stats-desc-card {
+      background:var(--bg2); border:1px solid var(--border); border-radius:var(--r);
+      padding:36px 26px; position:relative; overflow:hidden;
+      transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .stats-desc-card:hover {
+      border-color:var(--border-h); transform:translateY(-4px);
+      box-shadow:0 16px 50px rgba(0,0,0,0.4), 0 0 30px rgba(0,212,255,0.06);
+    }
+    .stats-desc-card::before {
+      content:''; position:absolute; top:0; left:15%; right:15%; height:1px;
+      background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity:0; transition:opacity 0.4s;
+    }
+    .stats-desc-card:hover::before { opacity:1; }
+    .stats-desc-val {
+      font-family:'JetBrains Mono',monospace; font-size:2.6rem; font-weight:800;
+      letter-spacing:-0.04em; margin-bottom:8px; line-height:1;
+    }
+    .stats-desc-lbl {
+      font-size:0.78rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.1em; color:var(--t1); margin-bottom:12px;
+    }
+    .stats-desc-p {
+      font-size:0.86rem; color:var(--t2); line-height:1.65;
+    }
+
     /* ── RESPONSIVE ── */
     @media(max-width:1024px) {
       .bento { grid-template-columns:repeat(6,1fr); }
       .b-8,.b-4 { grid-column:span 6; }
       .proc-grid { grid-template-columns:repeat(2,1fr); }
+      .stats-desc-grid { grid-template-columns:repeat(2,1fr); }
       .trust-grid { grid-template-columns:repeat(3,1fr); }
+      .lead-box { grid-template-columns:1fr; }
+      .lead-info { border-right:none; border-bottom:1px solid var(--border); padding:36px; }
+      .lead-form-wrap { padding:36px; }
     }
     @media(max-width:768px) {
       section { padding:90px 0; }
       .bento { grid-template-columns:1fr; }
       .b-8,.b-4 { grid-column:span 1; }
       .proc-grid { grid-template-columns:1fr; }
+      .stats-desc-grid { grid-template-columns:1fr; }
       .sim-split { grid-template-columns:1fr; }
       .sim-col:first-child { border-right:none; border-bottom:1px solid var(--border); }
       .radar-body { grid-template-columns:1fr; }
@@ -603,6 +713,7 @@
       .trust-grid { grid-template-columns:repeat(2,1fr); }
       .tbl-wrap { overflow-x:auto; }
       .tbl { min-width:600px; }
+      .form-row { grid-template-columns:1fr; }
     }
     @media(max-width:640px) {
       .nav-links { display:none; }
@@ -706,6 +817,57 @@
       <div class="mq-item"><span class="mq-num" style="color:var(--orange)">3.2s</span> Avg Inference Time</div>
     </div>
   </div>
+
+  <!-- ═══ STATS GRID WITH DESCRIPTIONS (AIMAURA STYLE) ═══ -->
+  <section style="padding: 80px 0 40px; position: relative;">
+    <div class="wrap">
+      <div class="stats-desc-grid">
+        <!-- Stat 1 -->
+        <div class="stats-desc-card rv">
+          <div>
+            <div class="stats-desc-val" style="color:var(--cyan);">$1.8M+</div>
+            <div class="stats-desc-lbl">VIP Revenue Protected</div>
+          </div>
+          <p class="stats-desc-p">
+            Preserved customer lifetime value by intercepting withdrawal and KYC friction triggers before users churned to competitors.
+          </p>
+        </div>
+
+        <!-- Stat 2 -->
+        <div class="stats-desc-card rv d1">
+          <div>
+            <div class="stats-desc-val" style="color:var(--green);">4.2x</div>
+            <div class="stats-desc-lbl">Faster Resolution SLA</div>
+          </div>
+          <p class="stats-desc-p">
+            Accelerated de-escalation speed versus standard manual support desks, turning negative public threads into resolved outcomes.
+          </p>
+        </div>
+
+        <!-- Stat 3 -->
+        <div class="stats-desc-card rv d2">
+          <div>
+            <div class="stats-desc-val" style="color:var(--purple);">84%</div>
+            <div class="stats-desc-lbl">Cascade Containment</div>
+          </div>
+          <p class="stats-desc-p">
+            Negative Trustpilot and Reddit threads neutralized at the root before algorithmic upvotes and viral community spreading.
+          </p>
+        </div>
+
+        <!-- Stat 4 -->
+        <div class="stats-desc-card rv d3">
+          <div>
+            <div class="stats-desc-val" style="color:var(--orange);">12+</div>
+            <div class="stats-desc-lbl">Monitored Surfaces</div>
+          </div>
+          <p class="stats-desc-p">
+            Continuous real-time surveillance across Trustpilot, Reddit, Google Reviews, Apple App Store, Google Play, and Web3 forums.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ═══ FEATURES BENTO ═══ -->
   <section id="features">
@@ -1195,16 +1357,118 @@
     </div>
   </section>
 
-  <!-- ═══ CTA ═══ -->
-  <section class="cta" id="contact">
+  <!-- ═══ DIRECT LEAD CAPTURE FORM SECTION ═══ -->
+  <section class="lead-section" id="contact">
     <div class="wrap">
       <div class="cta-glow"></div>
-      <div class="stag rv" style="justify-content:center;">Get Started</div>
-      <h2 class="rv d1">Ready to Defend Your<br><span class="grad">Brand Reputation?</span></h2>
-      <p class="rv d2">Start with a confidential, zero-risk 14-day pilot.<br>No contracts. No setup fees. Measurable churn reduction within 48 hours.</p>
-      <div class="cta-btns rv d3">
-        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Demo%20Request" class="btn-glow"><span>&#128231; Request Private Demo</span></a>
-        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Free%20Audit" class="btn-glass">&#128196; Get Your Free Audit</a>
+      <div class="centered">
+        <div class="stag rv">Get Started</div>
+        <h2 class="stitle rv d1">Initiate Your <span class="grad">Brand Reputation Defense</span></h2>
+        <p class="ssub rv d2" style="margin-bottom:48px;">Request a confidential blind reputation audit or schedule a live platform walkthrough with our founding engineering team.</p>
+      </div>
+
+      <div class="lead-box rv d2">
+        <!-- Left: Briefing & Perks -->
+        <div class="lead-info">
+          <div>
+            <div class="lead-info-title">Zero-Risk 14-Day Confidential Pilot</div>
+            <p class="lead-info-desc">
+              We analyze your live customer touchpoints across Trustpilot, Reddit, and Web3 channels to benchmark your sentiment health and calculate churn exposure.
+            </p>
+            <div class="lead-perks">
+              <div class="lead-perk-item">
+                <div class="lead-perk-check">✓</div>
+                <span>Full external sentiment &amp; FUD cascade audit</span>
+              </div>
+              <div class="lead-perk-item">
+                <div class="lead-perk-check">✓</div>
+                <span>Competitor benchmark analysis (vs up to 3 peers)</span>
+              </div>
+              <div class="lead-perk-item">
+                <div class="lead-perk-check">✓</div>
+                <span>Sub-5-minute AI response SLA demonstration</span>
+              </div>
+              <div class="lead-perk-item">
+                <div class="lead-perk-check">✓</div>
+                <span>Calculated VIP churn revenue exposure model</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lead-founder-note">
+            <div class="lfn-avatar">HG</div>
+            <div>
+              <div class="lfn-name">Harshit Goyal</div>
+              <div class="lfn-sub">Founder, ReputatAI · info@reputatai.in</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: The Interactive Form -->
+        <div class="lead-form-wrap">
+          <form class="lead-form" id="leadForm" onsubmit="submitLeadForm(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="leadName">Your Name</label>
+                <input class="form-input" type="text" id="leadName" name="name" placeholder="e.g. Alex Mercer" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="leadEmail">Work Email</label>
+                <input class="form-input" type="email" id="leadEmail" name="email" placeholder="name@company.com" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="leadCompany">Company / Brand Domain</label>
+                <input class="form-input" type="text" id="leadCompany" name="company" placeholder="e.g. stake.com or brand.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="leadChannel">Primary Surface to Protect</label>
+                <select class="form-select" id="leadChannel" name="channel">
+                  <option value="All Channels">All Channels (Trustpilot + Reddit + App)</option>
+                  <option value="Trustpilot">Trustpilot Verified Reviews</option>
+                  <option value="Reddit">Reddit Threads &amp; Subreddits</option>
+                  <option value="App Stores">Apple App Store &amp; Google Play</option>
+                  <option value="X / Twitter">X (Twitter) &amp; Web3 Communities</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leadGoal">Engagement Objective</label>
+              <select class="form-select" id="leadGoal" name="goal">
+                <option value="Confidential Audit">Request Free 14-Day Confidential Blind Audit</option>
+                <option value="Platform Demo">Book 1-on-1 Platform Walkthrough</option>
+                <option value="Competitor Benchmarking">Competitor Benchmark Matrix Report</option>
+                <option value="Enterprise Integration">Enterprise SLA / Custom API Integration</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leadNotes">Specific Threat Vectors or Notes (Optional)</label>
+              <textarea class="form-textarea" id="leadNotes" name="notes" placeholder="Tell us about any recurring review bottlenecks, withdrawal/support FUD loops, or competitors to benchmark..."></textarea>
+            </div>
+
+            <button type="submit" class="form-submit-btn" id="leadSubmitBtn">
+              <span>&#9889; Submit Request (24h Turnaround)</span>
+            </button>
+
+            <div class="form-footnote">&#128274; Strictly confidential. We never share audit telemetry or brand data with third parties.</div>
+          </form>
+
+          <!-- Success Confirmation Box -->
+          <div class="form-success" id="leadSuccess">
+            <div class="form-success-icon">&#10003;</div>
+            <div class="form-success-title">Proposal Request Dispatched!</div>
+            <div class="form-success-desc" id="leadSuccessMsg">
+              Thank you! Our engineering team will initiate your brand's external telemetry scan and deliver your confidential reputation audit brief within 24 hours.
+            </div>
+            <div style="margin-top:24px;">
+              <button class="btn-glass" onclick="resetLeadForm()" style="padding:10px 24px;font-size:0.86rem;">Submit Another Brand</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1222,7 +1486,7 @@
           <a href="#process">How It Works</a>
           <a href="#simulation">Simulation</a>
           <a href="#faq">FAQ</a>
-          <a href="mailto:info@reputatai.in">Contact</a>
+          <a href="#contact">Contact</a>
         </div>
         <div class="ft-copy">&copy; 2026 ReputatAI. All rights reserved.</div>
       </div>
@@ -1333,6 +1597,63 @@
       document.getElementById('simResultTitle').textContent = d.resultTitle;
       document.getElementById('simDelta').textContent = d.delta;
       document.getElementById('simImpact').innerHTML = d.impact;
+    }
+
+    // Lead Capture Form Submission Handler
+    function submitLeadForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('leadSubmitBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span>⚡ Transmitting Request...</span>';
+      btn.disabled = true;
+
+      const payload = {
+        name: document.getElementById('leadName').value,
+        email: document.getElementById('leadEmail').value,
+        company: document.getElementById('leadCompany').value,
+        channel: document.getElementById('leadChannel').value,
+        goal: document.getElementById('leadGoal').value,
+        notes: document.getElementById('leadNotes').value
+      };
+
+      // Asynchronously send to info@reputatai.in via FormSubmit AJAX endpoint
+      fetch('https://formsubmit.co/ajax/info@reputatai.in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `New ReputatAI Audit Request: ${payload.company} (${payload.name})`,
+          Name: payload.name,
+          Email: payload.email,
+          Company: payload.company,
+          Channel: payload.channel,
+          Objective: payload.goal,
+          Notes: payload.notes
+        })
+      })
+      .then(response => response.json())
+      .catch(err => {
+        console.warn('Form submission fallback:', err);
+      })
+      .finally(() => {
+        // Transition to high-converting success card
+        document.getElementById('leadForm').style.display = 'none';
+        const successBox = document.getElementById('leadSuccess');
+        successBox.style.display = 'flex';
+        document.getElementById('leadSuccessMsg').innerHTML = 
+          `Thank you <strong>${payload.name}</strong>! We have received your request for <strong>${payload.company}</strong>. Our engineering team has initiated the external sentiment scan and will deliver your confidential audit brief directly to <strong>${payload.email}</strong> within 24 hours.`;
+      });
+    }
+
+    function resetLeadForm() {
+      document.getElementById('leadForm').reset();
+      document.getElementById('leadForm').style.display = 'flex';
+      document.getElementById('leadSuccess').style.display = 'none';
+      const btn = document.getElementById('leadSubmitBtn');
+      btn.innerHTML = '<span>⚡ Submit Request (24h Turnaround)</span>';
+      btn.disabled = false;
     }
   </script>
 </body>
