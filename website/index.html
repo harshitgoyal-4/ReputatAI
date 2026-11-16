@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- High-Resolution SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300d4ff'/%3E%3Cstop offset='100%25' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%2306060b'/%3E%3Cpath d='M16 4 L26 8 V16 C26 22 16 28 16 28 C16 28 6 22 6 16 V8 Z' fill='none' stroke='url(%23g)' stroke-width='2'/%3E%3Ctext x='16' y='21' font-family='Arial,sans-serif' font-weight='900' font-size='13' fill='%2300d4ff' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -558,7 +560,7 @@
       padding:0 28px; font-size:0.92rem; color:var(--t2); line-height:1.7;
     }
     .faq-card.open .faq-answer {
-      max-height:220px; padding:0 28px 24px;
+      max-height:600px; padding:0 28px 24px;
     }
 
     /* ── CTA ── */
@@ -622,7 +624,7 @@
     .form-input, .form-select, .form-textarea {
       width:100%; padding:14px 16px; border-radius:10px;
       background:rgba(0,0,0,0.4); border:1px solid var(--border);
-      color:var(--t1); font-family:'Inter',sans-serif; font-size:0.92rem;
+      color:var(--t1); font-family:'Inter',sans-serif; font-size:16px;
       transition:all 0.3s; outline:none;
     }
     .form-input:focus, .form-select:focus, .form-textarea:focus {
@@ -715,13 +717,16 @@
       .tbl { min-width:600px; }
       .form-row { grid-template-columns:1fr; }
     }
-    @media(max-width:640px) {
+    @media(max-width:960px) {
       .nav-links { display:none; }
       .ham { display:flex; }
       .nav-links.open {
         display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0;
-        background:rgba(5,5,8,0.97); backdrop-filter:blur(20px); padding:28px; gap:22px; border-bottom:1px solid var(--border);
+        background:rgba(5,5,8,0.98); backdrop-filter:blur(24px); padding:28px; gap:22px; border-bottom:1px solid var(--border);
+        box-shadow:0 20px 40px rgba(0,0,0,0.8);
       }
+    }
+    @media(max-width:640px) {
       .trust-grid { grid-template-columns:1fr; }
     }
   </style>
@@ -1050,9 +1055,9 @@
 
       <!-- Interactive Switcher -->
       <div class="sim-nav rv d1">
-        <button class="sim-btn active" onclick="switchSim('trustpilot')">Trustpilot 1★ De-escalation</button>
-        <button class="sim-btn" onclick="switchSim('reddit')">Reddit Viral FUD Containment</button>
-        <button class="sim-btn" onclick="switchSim('appstore')">App Store Support Surge</button>
+        <button class="sim-btn active" onclick="switchSim(this, 'trustpilot')">Trustpilot 1★ De-escalation</button>
+        <button class="sim-btn" onclick="switchSim(this, 'reddit')">Reddit Viral FUD Containment</button>
+        <button class="sim-btn" onclick="switchSim(this, 'appstore')">App Store Support Surge</button>
       </div>
 
       <!-- Simulation Card Container -->
@@ -1507,11 +1512,21 @@
           <a href="#simulation">Simulation</a>
           <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('privacy')">Privacy Policy</a>
+          <a href="javascript:void(0)" onclick="openLegalModal('terms')">Terms of Service</a>
         </div>
-        <div class="ft-copy">&copy; 2026 ReputatAI. All rights reserved.</div>
+        <div class="ft-copy">&copy; 2026 ReputatAI. All rights reserved. Zero-Retention Telemetry · Enterprise Grade.</div>
       </div>
     </div>
   </footer>
+
+  <!-- ═══ ENTERPRISE LEGAL & COMPLIANCE MODAL ═══ -->
+  <div id="legalModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(16px); z-index:2000; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:var(--bg2); border:1px solid var(--border); border-radius:16px; max-width:640px; width:100%; max-height:85vh; overflow-y:auto; padding:36px; position:relative; box-shadow:0 25px 70px rgba(0,0,0,0.8);">
+      <button onclick="closeLegalModal()" style="position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.06); border:none; color:var(--t2); font-size:1.2rem; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+      <div id="legalModalContent"></div>
+    </div>
+  </div>
 
   <script>
     // Cursor glow
@@ -1532,14 +1547,58 @@
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
     });
 
-    // Smooth scroll
+    // Bulletproof Smooth scroll (guards against '#' DOMException error)
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
-        e.preventDefault();
-        const t = document.querySelector(a.getAttribute('href'));
-        if(t) { t.scrollIntoView({behavior:'smooth',block:'start'}); document.getElementById('navLinks').classList.remove('open'); }
+        const href = a.getAttribute('href');
+        if (!href || href === '#') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          document.getElementById('navLinks').classList.remove('open');
+          return;
+        }
+        const t = document.querySelector(href);
+        if (t) {
+          e.preventDefault();
+          t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('navLinks').classList.remove('open');
+        }
       });
     });
+
+    // Legal Modal Open/Close
+    function openLegalModal(type) {
+      const modal = document.getElementById('legalModal');
+      const content = document.getElementById('legalModalContent');
+      if (type === 'privacy') {
+        content.innerHTML = `
+          <h3 style="font-size:1.3rem; font-weight:800; color:var(--cyan); margin-bottom:12px;">Enterprise Privacy Policy</h3>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7; margin-bottom:16px;">Last Updated: 2026. ReputatAI respects organizational data sovereignty and operates under strict Zero-Retention protocols for proprietary data.</p>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--t1); margin-bottom:6px;">1. Telemetry Ingestion</h4>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7; margin-bottom:16px;">We only ingest publicly accessible review signals (Trustpilot, Reddit, App Stores, X). Customer identifiers are masked and anonymized at our edge proxies prior to LLM inference.</p>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--t1); margin-bottom:6px;">2. Zero Third-Party Selling</h4>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7; margin-bottom:16px;">ReputatAI does not sell, broker, or monetize client audit telemetry. All models run in dedicated single-tenant VPC containers.</p>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--t1); margin-bottom:6px;">3. Mutual NDA</h4>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7;">Enterprise clients may request a counter-signed Mutual Non-Disclosure Agreement (M-NDA) prior to data ingestion via info@reputatai.in.</p>
+        `;
+      } else {
+        content.innerHTML = `
+          <h3 style="font-size:1.3rem; font-weight:800; color:var(--cyan); margin-bottom:12px;">Terms of Service &amp; SLA</h3>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7; margin-bottom:16px;">ReputatAI provides automated sentiment telemetry, response drafting, and crisis simulation software.</p>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--t1); margin-bottom:6px;">1. Service Availability</h4>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7; margin-bottom:16px;">Enterprise tier subscriptions include a guaranteed 99.99% ingestion uptime SLA with 24/7 dedicated engineering support.</p>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--t1); margin-bottom:6px;">2. Compliance &amp; Ethical Guardrails</h4>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7; margin-bottom:16px;">ReputatAI de-escalation outputs must comply with applicable advertising standards and forum community guidelines. Human-in-the-Loop review is strongly recommended for critical legal notices.</p>
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--t1); margin-bottom:6px;">3. Pilot Terms</h4>
+          <p style="font-size:0.85rem; color:var(--t2); line-height:1.7;">The 14-day zero-risk audit incurs no contractual obligation, automatically expiring unless an annual enterprise license is executed.</p>
+        `;
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legalModal').style.display = 'none';
+    }
 
     // FAQ Accordion Toggle
     function toggleFaq(btn) {
@@ -1547,7 +1606,7 @@
       card.classList.toggle('open');
     }
 
-    // Simulation Data Switcher
+    // Simulation Data Switcher (Robust Element Binding)
     const simData = {
       trustpilot: {
         channel: "Platform: Trustpilot Verified Review",
@@ -1599,10 +1658,11 @@
       }
     };
 
-    function switchSim(key) {
+    function switchSim(btn, key) {
       document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      if (btn) btn.classList.add('active');
       const d = simData[key];
+      if (!d) return;
       document.getElementById('simChannel').textContent = d.channel;
       document.getElementById('simAvatar').textContent = d.avatar;
       document.getElementById('simAuthor').textContent = d.author;
