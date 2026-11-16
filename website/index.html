@@ -776,10 +776,10 @@
             Know exactly where you stand — and where your competitors are gaining ground.
           </p>
           <div class="terminal-mock">
-            <div><span class="prompt">reputat</span> <span class="cmd">benchmark --target stake.com --competitors roobet,shuffle,bcgame</span></div>
+            <div><span class="prompt">reputat</span> <span class="cmd">benchmark --target your-brand --competitors comp-a,comp-b,comp-c</span></div>
             <div><span class="output">✓ Ingested 4,218 reviews across 4 platforms</span></div>
-            <div><span class="output">✓ Sentiment delta: Stake trails Shuffle by 12.4pts on response velocity</span></div>
-            <div><span class="warn">⚠ Alert: KYC friction complaints 3.2x above sector median</span></div>
+            <div><span class="output">✓ Sentiment delta: Your brand trails Competitor A by 12.4pts on response velocity</span></div>
+            <div><span class="warn">⚠ Alert: Support friction complaints 3.2x above industry median</span></div>
           </div>
         </div>
 
@@ -848,21 +848,22 @@
           <div class="dot-r"></div>
           <div class="dot-y"></div>
           <div class="dot-g"></div>
-          <div class="dashboard-url">reputatai.in/dashboard — live threat monitor</div>
+          <div class="dashboard-url">reputatai.in/command-center — live threat monitor</div>
         </div>
-        <div class="dashboard-body">
+        <div class="dashboard-body" style="grid-template-columns: 1fr 1.2fr;">
+          <!-- Left: Sentiment + Stats -->
           <div class="dash-panel">
             <h5>&#128200; Sentiment Breakdown — Last 7 Days</h5>
             <div class="sentiment-bar-group">
               <div class="sentiment-row">
                 <div class="sentiment-label">Positive</div>
-                <div class="sentiment-track"><div class="sentiment-fill positive" style="width: 38%"></div></div>
-                <div class="sentiment-pct">38%</div>
+                <div class="sentiment-track"><div class="sentiment-fill positive" style="width: 42%"></div></div>
+                <div class="sentiment-pct">42%</div>
               </div>
               <div class="sentiment-row">
                 <div class="sentiment-label">Neutral</div>
-                <div class="sentiment-track"><div class="sentiment-fill neutral" style="width: 30%"></div></div>
-                <div class="sentiment-pct">30%</div>
+                <div class="sentiment-track"><div class="sentiment-fill neutral" style="width: 26%"></div></div>
+                <div class="sentiment-pct">26%</div>
               </div>
               <div class="sentiment-row">
                 <div class="sentiment-label">Negative</div>
@@ -870,29 +871,68 @@
                 <div class="sentiment-pct">32%</div>
               </div>
             </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border-subtle);">
+              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-cyan);">2,847</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Mentions Tracked</div>
+              </div>
+              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-green);">14</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Threats Neutralized</div>
+              </div>
+              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-orange);">3.2s</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Avg Response Time</div>
+              </div>
+              <div style="text-align:center; padding:12px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent-purple);">12</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em;">Platforms Monitored</div>
+              </div>
+            </div>
           </div>
+          <!-- Right: Live Threat Feed -->
           <div class="dash-panel">
-            <h5>&#128680; Live Threat Feed</h5>
+            <h5>&#128680; Live Threat Feed — All Channels</h5>
             <div class="alert-feed">
               <div class="alert-item">
                 <div class="alert-dot crit"></div>
-                Withdrawal delay complaint trending on r/gambling
+                <div style="flex:1;">
+                  <div style="color:var(--text-primary); font-weight:500;">Negative review surge detected on Trustpilot</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Trustpilot &nbsp;·&nbsp; Severity: Critical &nbsp;·&nbsp; AI Response: Drafted</div>
+                </div>
                 <div class="alert-time">2m ago</div>
               </div>
               <div class="alert-item">
                 <div class="alert-dot warn"></div>
-                KYC friction thread gaining traction — 47 upvotes
+                <div style="flex:1;">
+                  <div style="color:var(--text-primary); font-weight:500;">Support complaint thread gaining traction — 47 upvotes</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Reddit &nbsp;·&nbsp; Severity: High &nbsp;·&nbsp; Escalation: Pending</div>
+                </div>
                 <div class="alert-time">8m ago</div>
               </div>
               <div class="alert-item">
                 <div class="alert-dot info"></div>
-                Positive VIP experience review posted on Trustpilot
+                <div style="flex:1;">
+                  <div style="color:var(--text-primary); font-weight:500;">Positive customer experience shared on Google Reviews</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Google &nbsp;·&nbsp; Sentiment: +0.87 &nbsp;·&nbsp; Status: Amplified</div>
+                </div>
                 <div class="alert-time">14m ago</div>
               </div>
               <div class="alert-item">
                 <div class="alert-dot crit"></div>
-                Coordinated negative review pattern detected
+                <div style="flex:1;">
+                  <div style="color:var(--text-primary); font-weight:500;">Coordinated negative review pattern detected across 3 platforms</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: Multi-Platform &nbsp;·&nbsp; Severity: Critical &nbsp;·&nbsp; Playbook: Activated</div>
+                </div>
                 <div class="alert-time">22m ago</div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot warn"></div>
+                <div style="flex:1;">
+                  <div style="color:var(--text-primary); font-weight:500;">Brand mention in negative news article — spreading on X</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Source: X (Twitter) &nbsp;·&nbsp; Velocity: 12 shares/hr &nbsp;·&nbsp; Containment: Active</div>
+                </div>
+                <div class="alert-time">31m ago</div>
               </div>
             </div>
           </div>
@@ -985,28 +1025,28 @@
     </div>
   </section>
 
-  <!-- ═══ TECH STACK ═══ -->
+  <!-- ═══ TRUST & INFRASTRUCTURE ═══ -->
   <section>
     <div class="container">
       <div class="section-header-center">
-        <div class="section-label reveal">Under The Hood</div>
-        <h2 class="section-title reveal reveal-delay-1">Enterprise Architecture</h2>
+        <div class="section-label reveal">Trust & Security</div>
+        <h2 class="section-title reveal reveal-delay-1">Enterprise-Grade. Battle-Tested.</h2>
         <p class="section-subtitle reveal reveal-delay-2">
-          Built on production-grade infrastructure with multi-LLM orchestration,
-          real-time streaming, and zero-downtime deployment.
+          Built for organizations that can't afford downtime, data leaks, or slow responses.
+          Our infrastructure is designed to scale with your reputation surface.
         </p>
       </div>
       <div class="tech-grid reveal reveal-delay-3">
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>Python 3.12</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>NVIDIA NIM</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Multi-LLM Engine</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-pink)"></div>Streamlit</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>Plotly Analytics</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-blue)"></div>Pydantic v2</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>REST APIs</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>Edge CDN</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Headless PDF</div>
-        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>WebSocket Feeds</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>256-bit AES Encryption</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>99.99% Uptime SLA</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Multi-LLM Orchestration</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-pink)"></div>SOC 2 Ready</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>Global Edge Network</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-blue)"></div>GDPR Compliant</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-cyan)"></div>Real-Time WebSocket Feeds</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-green)"></div>Role-Based Access Control</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-purple)"></div>Auto-Scaling Infrastructure</div>
+        <div class="tech-pill"><div class="tech-dot" style="background:var(--accent-orange)"></div>Dedicated Tenant Isolation</div>
       </div>
     </div>
   </section>
@@ -1022,10 +1062,10 @@
         No contracts. No setup fees. Real results within 48 hours.
       </p>
       <div class="cta-buttons reveal reveal-delay-3">
-        <a href="mailto:harshit@reputatai.in?subject=ReputatAI%20Demo%20Request" class="btn-primary">
+        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Demo%20Request" class="btn-primary">
           <span>&#128231; Request Private Demo</span>
         </a>
-        <a href="mailto:harshit@reputatai.in?subject=ReputatAI%20Confidential%20Audit" class="btn-secondary">
+        <a href="mailto:info@reputatai.in?subject=ReputatAI%20Confidential%20Audit" class="btn-secondary">
           &#128196; Get Your Free Audit
         </a>
       </div>
@@ -1044,7 +1084,7 @@
           <a href="#features">Platform</a>
           <a href="#how-it-works">How It Works</a>
           <a href="#compare">Compare</a>
-          <a href="mailto:harshit@reputatai.in">Contact</a>
+          <a href="mailto:info@reputatai.in">Contact</a>
         </div>
         <div class="footer-copy">&copy; 2026 ReputatAI. All rights reserved.</div>
       </div>
