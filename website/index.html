@@ -710,6 +710,8 @@
     .addon-turnaround { font-size:0.72rem; color:var(--green); font-family:'JetBrains Mono',monospace; font-weight:700; }
     .addon-callout-text { font-size:0.84rem; color:var(--t2); line-height:1.6; }
 
+    .hide-mob { display:inline; }
+
     /* ── RESPONSIVE MEDIA QUERIES (CLEAN CASCADE) ── */
     @media(max-width:1024px) {
       .bento { grid-template-columns:repeat(6,1fr); }
@@ -731,7 +733,66 @@
       }
     }
     @media(max-width:768px) {
-      section { padding:80px 0; }
+      .hide-mob { display:none !important; }
+      .nav-in { padding:0 20px; }
+      section { padding:70px 0; }
+
+      /* Mobile Hero Overrides */
+      .hero {
+        min-height:auto !important;
+        padding:120px 0 32px !important;
+      }
+      .hero-inner {
+        max-width:100% !important;
+        width:100% !important;
+      }
+      .hero-tag {
+        font-size:0.74rem !important;
+        padding:6px 14px 6px 8px !important;
+        margin-bottom:20px !important;
+        max-width:100% !important;
+      }
+      .hero h1 {
+        font-size:clamp(2.1rem, 8.5vw, 2.9rem) !important;
+        line-height:1.12 !important;
+        letter-spacing:-0.035em !important;
+        margin-bottom:18px !important;
+      }
+      .hero p {
+        font-size:1rem !important;
+        line-height:1.6 !important;
+        margin-bottom:28px !important;
+        max-width:100% !important;
+      }
+      .hero-btns {
+        flex-direction:column !important;
+        width:100% !important;
+        gap:12px !important;
+      }
+      .hero-btns a {
+        width:100% !important;
+        justify-content:center !important;
+        text-align:center !important;
+        padding:14px 20px !important;
+        font-size:0.95rem !important;
+      }
+      .hero-vis { display:none !important; }
+
+      /* Marquee Fix: Reset desktop negative margin to prevent overlap */
+      .marquee-wrap {
+        margin-top:32px !important;
+        padding:18px 0 !important;
+      }
+      .marquee-track { gap:36px !important; }
+      .mq-item { gap:10px !important; font-size:0.82rem !important; }
+      .mq-num { font-size:1.25rem !important; }
+
+      /* Section Typography */
+      .stag { font-size:0.72rem !important; margin-bottom:12px !important; }
+      .stitle { font-size:clamp(1.75rem, 6.5vw, 2.3rem) !important; line-height:1.15 !important; margin-bottom:14px !important; }
+      .ssub { font-size:0.95rem !important; line-height:1.65 !important; }
+
+      /* Grids & Panels */
       .bento { grid-template-columns:1fr; }
       .b-8,.b-4 { grid-column:span 1; }
       .proc-grid { grid-template-columns:1fr; }
@@ -740,11 +801,20 @@
       .sim-col:first-child { border-right:none; border-bottom:1px solid var(--border); }
       .radar-body { grid-template-columns:1fr; }
       .radar-panel:first-child { border-right:none; border-bottom:1px solid var(--border); }
-      .hero-vis { display:none; }
       .trust-grid { grid-template-columns:repeat(2,1fr); }
       .tbl-wrap { overflow-x:auto; }
       .tbl { min-width:600px; }
       .form-row { grid-template-columns:1fr; }
+      .term { overflow-x:auto; -webkit-overflow-scrolling:touch; font-size:0.72rem; word-break:break-word; }
+
+      /* CTA & Footer */
+      .cta { padding:80px 0 !important; }
+      .cta h2 { font-size:clamp(1.8rem, 7vw, 2.6rem) !important; }
+      .cta-btns { flex-direction:column !important; width:100% !important; gap:12px !important; }
+      .cta-btns a { width:100% !important; justify-content:center !important; text-align:center !important; }
+      footer { padding:40px 0 !important; }
+      .ft-inner { flex-direction:column !important; align-items:center !important; text-align:center !important; gap:20px !important; }
+      .ft-links { flex-wrap:wrap !important; justify-content:center !important; gap:16px !important; }
     }
     @media(max-width:640px) {
       .wrap { padding:0 18px; }
@@ -753,7 +823,21 @@
       .sim-col { padding:24px 18px; }
       .lead-form-wrap, .lead-info { padding:28px 18px; }
       .trust-grid { grid-template-columns:1fr; }
-      .sim-btn { font-size:0.78rem; padding:8px 14px; width:100%; text-align:center; }
+      .sim-nav { gap:8px !important; margin-top:24px !important; margin-bottom:24px !important; }
+      .sim-btn { font-size:0.8rem !important; padding:10px 14px !important; width:100% !important; text-align:center !important; }
+      .sim-header { flex-direction:column !important; align-items:flex-start !important; gap:10px !important; padding:14px 18px !important; }
+      .sim-header-left { flex-direction:column !important; align-items:flex-start !important; gap:6px !important; }
+      .radar-topbar { flex-wrap:wrap !important; gap:8px !important; padding:12px 16px !important; }
+      .radar-url { width:100% !important; text-align:left !important; font-size:0.7rem !important; }
+      .stats-desc-card { padding:24px 20px !important; }
+      .stats-desc-val { font-size:2.2rem !important; }
+    }
+    @media(max-width:480px) {
+      .sim-diagnostics { grid-template-columns:1fr !important; gap:8px !important; }
+      .sim-resp-header { flex-direction:column !important; align-items:flex-start !important; gap:8px !important; }
+      .sim-result-card { flex-direction:column !important; align-items:flex-start !important; gap:8px !important; }
+      .threat-item { flex-direction:column !important; gap:6px !important; }
+      .threat-time { align-self:flex-end !important; }
     }
   </style>
 </head>
@@ -797,8 +881,8 @@
           Autonomous Defense Radar Active
         </div>
         <h1 class="rv d1">
-          Your Brand's<br>
-          <span class="grad">Reputation Shield</span><br>
+          Your Brand's<br class="hide-mob">
+          <span class="grad">Reputation Shield</span><br class="hide-mob">
           Powered by AI
         </h1>
         <p class="rv d2">
